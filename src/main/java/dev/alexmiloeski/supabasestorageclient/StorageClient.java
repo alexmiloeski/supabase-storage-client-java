@@ -33,7 +33,7 @@ public class StorageClient {
     }
 
     public List<Bucket> listBuckets() {
-        // GET url/dev/v1/bucket
+        // GET url/storage/v1/bucket
         String body = newRequest()
                 .bucket()
                 .make();
@@ -41,7 +41,7 @@ public class StorageClient {
     }
 
     public Bucket getBucket(final String bucketId) {
-        // GET url/dev/v1/bucket/some-bucket
+        // GET url/storage/v1/bucket/some-bucket
         String body = newRequest()
                 .bucket()
                 .path(bucketId)
@@ -50,7 +50,7 @@ public class StorageClient {
     }
 
     public List<FileObject> listFilesInBucket(final String bucketId, final String folderId) {
-        // POST url/dev/v1/object/list/test-bucket-1
+        // POST url/storage/v1/object/list/test-bucket-1
         String body = newRequest()
                 .object()
                 .path("/list/" + bucketId)
@@ -67,7 +67,7 @@ public class StorageClient {
     }
 
     public String downloadFile(final String bucketId, final String fileId) {
-        // GET url/dev/v1/object/some-bucket/some-file
+        // GET url/storage/v1/object/some-bucket/some-file
         return newRequest()
                 .object()
                 .path(bucketId + "/" + fileId)
