@@ -49,6 +49,82 @@ public class StorageClient {
         return Mapper.toBucket(body);
     }
 
+    public String createBucket(String id, String name, boolean isPublic,
+                                     Integer fileSizeLimit, List<String> allowedMimeTypes) {
+        // POST url/storage/v1/bucket
+        Bucket newBucket = new Bucket(
+                id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
+        String json;
+        try {
+            json = Mapper.mapper.writeValueAsString(newBucket);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return null;
+        }
+        String body = newRequest()
+                .bucket()
+                .post(json)
+                .jsonContent()
+                .make();
+        Bucket bucket = Mapper.toBucket(body);
+        System.out.println("bucket = " + bucket);
+        return bucket == null ? null : bucket.name();
+    }
+
+    public String deleteBucket(String id) {
+        String body = newRequest()
+                .bucket()
+                .delete()
+                .path(id)
+                .make();
+//        Bucket bucket = Mapper.toBucket(body);
+//        return bucket == null ? null : bucket.name();
+        try {
+            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
+            return resMap.get("message");
+        } catch (Exception ignore) {}
+        return null;
+        // response: {"message":"Successfully deleted"}
+    }
+
+    public String emptyBucket(String id) {
+        String body = newRequest()
+                .bucket()
+                .post()
+                .path(id + "/empty")
+                .make();
+//        Bucket bucket = Mapper.toBucket(body);
+//        return bucket == null ? null : bucket.name();
+        // response: {"message":"Successfully emptied"}
+        return body;
+    }
+
+    public String updateBucket(String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
+        // POST url/storage/v1/bucket
+        Bucket newBucket = new Bucket(
+                null, null, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
+        String json;
+        try {
+            json = Mapper.mapper.writeValueAsString(newBucket);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return null;
+        }
+        System.out.println("json = " + json);
+        String body = newRequest()
+                .bucket()
+                .put(json)
+                .jsonContent()
+                .path(id)
+                .make();
+//        Bucket bucket = Mapper.toBucket(body);
+//        return bucket == null ? null : bucket.name();
+        // response = {"message":"Successfully updated"}
+        return body;
+    }
+
     public List<FileObject> listFilesInBucket(final String bucketId, final String folderId) {
         // POST url/storage/v1/object/list/test-bucket-1
         String body = newRequest()
