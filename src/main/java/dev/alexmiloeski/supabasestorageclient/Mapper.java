@@ -14,13 +14,13 @@ class Mapper {
     private Mapper() {}
 
     static Bucket toBucket(String string) {
-        if (string == null) return null;
+        if (string == null) throw new RuntimeException("received json was null");
         try {
             return mapper.readValue(string, Bucket.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
