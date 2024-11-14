@@ -3,11 +3,13 @@ package dev.alexmiloeski.supabasestorageclient.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Bucket(String id, String name, String owner,
                      @JsonProperty(value = "public") boolean isPublic,
                      @JsonProperty(value = "file_size_limit") Integer fileSizeLimit,
-                     @JsonProperty(value = "allowed_mime_types") String allowedMimeTypes,
+                     @JsonProperty(value = "allowed_mime_types") List<String> allowedMimeTypes,
                      @JsonProperty(value = "created_at") String createdAt,
                      @JsonProperty(value = "updated_at") String updatedAt) {
 }
