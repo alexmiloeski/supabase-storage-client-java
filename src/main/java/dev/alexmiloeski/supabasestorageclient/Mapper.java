@@ -11,6 +11,8 @@ import java.util.List;
 class Mapper {
     static final ObjectMapper mapper = new ObjectMapper();
 
+    private Mapper() {}
+
     static Bucket toBucket(String string) {
         if (string == null) return null;
         try {
