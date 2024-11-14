@@ -43,6 +43,10 @@ class RequestMaker {
         return this;
     }
 
+    RequestMaker post() {
+        return post(null);
+    }
+
     RequestMaker post(String body) {
         this.method = Methods.POST;
         this.body = body == null ? HttpRequest.BodyPublishers.noBody() :  HttpRequest.BodyPublishers.ofString(body);
