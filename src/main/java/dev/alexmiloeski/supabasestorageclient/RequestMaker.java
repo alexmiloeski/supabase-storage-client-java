@@ -12,7 +12,7 @@ class RequestMaker {
     private static final String OBJECT_PATH = "/object";
 
     private final String apiUrl;
-    private String resource;
+    private String resource = "";
     private String path;
     private String apiKey;
     private Methods method = Methods.GET;
