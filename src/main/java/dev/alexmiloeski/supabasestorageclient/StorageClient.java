@@ -1,8 +1,10 @@
 package dev.alexmiloeski.supabasestorageclient;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class StorageClient {
@@ -12,6 +14,22 @@ public class StorageClient {
     public StorageClient(String projectId, String apiKey) {
         this.apiUrl = "https://" + projectId + ".supabase.co";
         this.apiKey = apiKey;
+    }
+
+    public boolean isHealthy() {
+        // GET url/storage/v1/health
+        String body = newRequest()
+                .path("health")
+                .make();
+        try {
+            HashMap<String, Object> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
+            Object healthyO = resMap.get("healthy");
+            if (healthyO instanceof Boolean) {
+                return (boolean) healthyO;
+            }
+        } catch (Exception ignore) {}
+        return false;
+        //{"healthy":true}
     }
 
     public List<Bucket> listBuckets() {
