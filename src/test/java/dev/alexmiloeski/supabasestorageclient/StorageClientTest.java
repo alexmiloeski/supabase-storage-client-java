@@ -1,7 +1,10 @@
 package dev.alexmiloeski.supabasestorageclient;
 
+import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +29,27 @@ class StorageClientTest {
     void createBucket() {
         String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
         assertEquals(testBucketId, testBucketIdRes);
+    }
+
+    @Test
+    @Order(20)
+    @Disabled
+    void listBuckets() throws InterruptedException {
+        Thread.sleep(100);
+        List<Bucket> buckets = storageClient.listBuckets();
+        assertNotNull(buckets);
+        assertTrue(buckets.size() > 1);
+        assertTrue(buckets.stream().anyMatch(b -> testBucketId.equals(b.name())));
+    }
+
+    @Test
+    @Order(25)
+    @Disabled
+    void getBucket() throws InterruptedException {
+        Thread.sleep(100);
+        Bucket bucket = storageClient.getBucket(testBucketId);
+        assertNotNull(bucket);
+        assertEquals(testBucketId, bucket.id());
     }
 
     @Test
