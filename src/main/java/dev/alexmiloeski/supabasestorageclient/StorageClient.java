@@ -96,6 +96,11 @@ public class StorageClient {
                 .make();
 //        Bucket bucket = Mapper.toBucket(body);
 //        return bucket == null ? null : bucket.name();
+        try {
+            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
+            return resMap.get("message");
+        } catch (Exception ignore) {}
+        return null;
         // response: {"message":"Successfully emptied"}
         return body;
     }
@@ -121,6 +126,11 @@ public class StorageClient {
                 .make();
 //        Bucket bucket = Mapper.toBucket(body);
 //        return bucket == null ? null : bucket.name();
+        try {
+            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
+            return resMap.get("message");
+        } catch (Exception ignore) {}
+        return null;
         // response = {"message":"Successfully updated"}
         return body;
     }
