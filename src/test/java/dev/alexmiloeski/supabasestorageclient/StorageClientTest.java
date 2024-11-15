@@ -81,4 +81,12 @@ class StorageClientTest {
         assertNotNull(message);
         assertFalse(message.isEmpty());
     }
+
+    @Test
+    @Order(60)
+    @Disabled
+    void healthCheck() {
+        boolean isHealthy = storageClient.isHealthy();
+        assertTrue(isHealthy);
+    }
 }
