@@ -53,6 +53,26 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(30)
+    @Disabled
+    void emptyBucket() throws InterruptedException {
+        Thread.sleep(100);
+        String message = storageClient.emptyBucket(testBucketId);
+        assertNotNull(message);
+        assertFalse(message.isEmpty());
+    }
+
+    @Test
+    @Order(40)
+    @Disabled
+    void updateBucket() throws InterruptedException {
+        Thread.sleep(100);
+        String message = storageClient.updateBucket(testBucketId, false, 0, null);
+        assertNotNull(message);
+        assertFalse(message.isEmpty());
+    }
+
+    @Test
     @Order(50)
     @Disabled
     void deleteBucket() throws InterruptedException {
