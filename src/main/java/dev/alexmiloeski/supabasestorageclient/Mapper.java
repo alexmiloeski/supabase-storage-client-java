@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 
 import java.util.List;
 
@@ -37,6 +38,17 @@ class Mapper {
     }
 
     static List<FileObject> toObjects(String string) {
+        if (string == null) return null;
+        try {
+            return mapper.readValue(string, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("COULDN'T MAP YO!");
+            return null;
+        }
+    }
+
+    static ErrorResponse toErrorResponse(String string) {
         if (string == null) return null;
         try {
             return mapper.readValue(string, new TypeReference<>() {});
