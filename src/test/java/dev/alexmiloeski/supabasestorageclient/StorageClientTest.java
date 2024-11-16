@@ -1,8 +1,6 @@
 package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
-import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
-import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
 
@@ -32,6 +30,14 @@ class StorageClientTest {
     void createBucket() {
         String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
         assertEquals(testBucketId, testBucketIdRes);
+    }
+
+    @Test
+    @Order(15)
+    @Disabled
+    void createBucketWithDuplicateNameShouldReturnNull() {
+        String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
+        assertNull(testBucketIdRes);
     }
 
     @Test
