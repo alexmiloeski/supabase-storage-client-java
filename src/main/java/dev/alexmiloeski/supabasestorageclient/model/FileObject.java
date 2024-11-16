@@ -9,7 +9,7 @@ public record FileObject(String id, String name,
                          @JsonProperty(value = "updated_at") String updatedAt,
                          @JsonProperty(value = "last_accessed_at") String lastAccessedAt,
                          Metadata metadata) {
-    private record Metadata(String eTag, long size, String mimetype, String cacheControl,
+    public record Metadata(String eTag, long size, String mimetype, String cacheControl,
                             String lastModified, long contentLength, int httpStatusCode) {}
 }
 /*
