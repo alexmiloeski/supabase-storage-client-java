@@ -12,6 +12,8 @@ import java.util.List;
 class Mapper {
     static final ObjectMapper mapper = new ObjectMapper();
 
+    // todo: replace RuntimeException with MapperException
+
     private Mapper() {}
 
     static Bucket toBucket(String string) {
@@ -33,7 +35,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -44,7 +46,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -55,7 +57,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

@@ -38,6 +38,7 @@ public class StorageClient {
                 .bucket()
                 .make();
         return Mapper.toBuckets(body);
+        // todo: if mapper throws, return error response with exception
     }
 
     public Bucket getBucket(final String bucketId) {
@@ -47,6 +48,7 @@ public class StorageClient {
                 .path(bucketId)
                 .make();
         return Mapper.toBucket(body);
+        // todo: if mapper throws, return error response with exception
     }
 
     public String createBucket(String id, String name, boolean isPublic,
@@ -68,6 +70,7 @@ public class StorageClient {
                 .jsonContent()
                 .make();
         Bucket bucket = Mapper.toBucket(body);
+        // todo: if mapper throws, return error response with exception
         System.out.println("bucket = " + bucket);
         return bucket == null ? null : bucket.name();
     }
@@ -146,6 +149,7 @@ public class StorageClient {
                 .jsonContent()
                 .make();
         return Mapper.toObjects(body);
+        // todo: if mapper throws, return error response with exception
     }
 
     public List<FileObject> listFilesInBucket(final String bucketId) {
