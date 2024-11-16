@@ -33,8 +33,35 @@ public class StorageClient {
         //{"healthy":true}
     }
 
+    /**
+     * REST GET url/storage/v1/bucket
+     * REST response body example:
+     * [
+     *     {
+     *         "id": "test-bucket-1",
+     *         "name": "test-bucket-1",
+     *         "owner": "",
+     *         "public": false,
+     *         "file_size_limit": null,
+     *         "allowed_mime_types": null,
+     *         "created_at": "2024-11-12T19:13:16.984Z",
+     *         "updated_at": "2024-11-12T19:13:16.984Z"
+     *     },
+     *     {
+     *         "id": "test-bucket-2",
+     *         "name": "test-bucket-2",
+     *         "owner": "",
+     *         "public": true,
+     *         "file_size_limit": 0,
+     *         "allowed_mime_types": [
+     *             "image/jpeg"
+     *         ],
+     *         "created_at": "2024-11-15T08:01:18.713Z",
+     *         "updated_at": "2024-11-15T08:01:18.713Z"
+     *     }
+     * ]
+     */
     public List<Bucket> listBuckets() {
-        // GET url/storage/v1/bucket
         String body = newRequest()
                 .bucket()
                 .make();
@@ -42,8 +69,21 @@ public class StorageClient {
         // todo: if mapper throws, return error response with exception
     }
 
+    /**
+     * REST GET url/storage/v1/bucket/some-bucket
+     * REST response body example:
+     * {
+     *     "id": "test-bucket",
+     *     "name": "test-bucket",
+     *     "owner": "",
+     *     "public": false,
+     *     "file_size_limit": null,
+     *     "allowed_mime_types": null,
+     *     "created_at": "2024-11-12T19:13:16.984Z",
+     *     "updated_at": "2024-11-12T19:13:16.984Z"
+     * }
+     */
     public Bucket getBucket(final String bucketId) {
-        // GET url/storage/v1/bucket/some-bucket
         String body = newRequest()
                 .bucket()
                 .path(bucketId)
@@ -52,6 +92,21 @@ public class StorageClient {
         // todo: if mapper throws, return error response with exception
     }
 
+    /**
+     * REST POST url/storage/v1/bucket
+     * REST request body example:
+     * {
+     *   "id": "test-bucket",
+     *   "name": "test-bucket",
+     *   "public": true,
+     *   "file_size_limit": 0,
+     *   "allowed_mime_types": ["image/jpeg"]
+     * }
+     * REST response body example:
+     * {
+     *     "name": "test-bucket"
+     * }
+     */
     public String createBucket(String id, String name, boolean isPublic,
                                Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
@@ -76,6 +131,10 @@ public class StorageClient {
         return bucket == null ? null : bucket.name();
     }
 
+    /**
+     * REST DELETE url/storage/v1/bucket/some-bucket
+     * REST response body example: {"message":"Successfully deleted"}
+     */
     public String deleteBucket(String id) {
         String body = newRequest()
                 .bucket()
@@ -92,6 +151,10 @@ public class StorageClient {
         // response:
     }
 
+    /**
+     * REST POST url/storage/v1/bucket/some-bucket/empty
+     * REST response body example: {"message":"Successfully emptied"}
+     */
     public String emptyBucket(String id) {
         String body = newRequest()
                 .bucket()
@@ -108,6 +171,18 @@ public class StorageClient {
         // response: {"message":"Successfully emptied"}
     }
 
+    /**
+     * REST PUT url/storage/v1/bucket/test-bucket
+     * REST request body example:
+     *  {
+     *   "id": "test-bucket",
+     *   "name": "test-bucket",
+     *   "public": false,
+     *   "file_size_limit": 0,
+     *   "allowed_mime_types": ["image/jpeg"]
+     * }
+     * REST response body example: {"message":"Successfully updated"}
+     */
     public String updateBucket(String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
         Bucket newBucket = new Bucket(
@@ -137,8 +212,57 @@ public class StorageClient {
         // response = {"message":"Successfully updated"}
     }
 
-    public List<FileObject> listFilesInBucket(final String bucketId, final String folderId) {
-        // POST url/storage/v1/object/list/test-bucket-1
+    /**
+     * Use this method if you want to list all files in the bucket with the possibility of
+     * specifying custom values for any of the following: folder prefix, offset, and limit.
+     * If you want to leave any of them to the default value, just pass null for that field.
+     * <pre>
+     * REST POST url/storage/v1/object/list/test-bucket
+     * REST request body example: {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":""}
+     * REST response body example:
+     * [
+     *     {
+     *         "name": "some-folder",
+     *         "id": null,
+     *         "updated_at": null,
+     *         "created_at": null,
+     *         "last_accessed_at": null,
+     *         "metadata": null
+     *     },
+     *     {
+     *         "name": "some-image-file",
+     *         "id": "b301b87d-3c57-4f40-988f-20d8691382df",
+     *         "updated_at": "2024-11-12T19:14:12.167Z",
+     *         "created_at": "2024-11-12T19:14:12.167Z",
+     *         "last_accessed_at": "2024-11-12T19:14:12.167Z",
+     *         "metadata": {
+     *             "eTag": "\"88c163864a2335ddbc8d6132a4db382c-1\"",
+     *             "size": 41076,
+     *             "mimetype": "image/jpeg",
+     *             "cacheControl": "max-age=3600",
+     *             "lastModified": "2024-11-12T19:14:12.000Z",
+     *             "contentLength": 41076,
+     *             "httpStatusCode": 200
+     *         }
+     *     },
+     *     {
+     *         "name": "some-text-file.txt",
+     *         "id": "cf522b79-7cdb-4c08-b454-badd27f0ea86",
+     *         "updated_at": "2024-11-12T22:36:52.504Z",
+     *         "created_at": "2024-11-12T22:36:52.504Z",
+     *         "last_accessed_at": "2024-11-12T22:36:52.504Z",
+     *         "metadata": {
+     *             "eTag": "\"5f2b51ca2fdc5baa31ec02e002f69aec\"",
+     *             "size": 10,
+     *             "mimetype": "text/plain",
+     *             "cacheControl": "no-cache",
+     *             "lastModified": "2024-11-12T22:36:53.000Z",
+     *             "contentLength": 10,
+     *             "httpStatusCode": 200
+     *         }
+     *     }
+     * ]</pre>
+     */
     public List<FileObject> listFilesInBucket(final String bucketId, final ListFilesOptions options) {
         int limit = 100;
         int offset = 0;
@@ -152,8 +276,6 @@ public class StorageClient {
                 .object()
                 .path("/list/" + bucketId)
                 .post("""
-                        {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
-                        .formatted(folderId))
                         {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
                         .formatted(limit, offset, folderId))
                 .jsonContent()
@@ -162,12 +284,21 @@ public class StorageClient {
         // todo: if mapper throws, return error response with exception
     }
 
+    /**
+     * Use this method if you want to list all files in the bucket with the default values of
+     * <br> - no folder prefix
+     * <br> - offset 0
+     * <br> - limit 100
+     * <br><br>For custom options, see {@link #listFilesInBucket(String, ListFilesOptions)}
+     */
     public List<FileObject> listFilesInBucket(final String bucketId) {
         return listFilesInBucket(bucketId, null);
     }
 
+    /**
+     * REST GET url/storage/v1/object/test-bucket/some-file
+     */
     public String downloadFile(final String bucketId, final String fileId) {
-        // GET url/storage/v1/object/some-bucket/some-file
         return newRequest()
                 .object()
                 .path(bucketId + "/" + fileId)
