@@ -1,5 +1,6 @@
 package dev.alexmiloeski.supabasestorageclient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
@@ -52,7 +53,7 @@ public class StorageClient {
     }
 
     public String createBucket(String id, String name, boolean isPublic,
-                                     Integer fileSizeLimit, List<String> allowedMimeTypes) {
+                               Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
         Bucket newBucket = new Bucket(
                 id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
@@ -88,7 +89,7 @@ public class StorageClient {
             return resMap.get("message");
         } catch (Exception ignore) {}
         return null;
-        // response: {"message":"Successfully deleted"}
+        // response:
     }
 
     public String emptyBucket(String id) {
@@ -105,7 +106,6 @@ public class StorageClient {
         } catch (Exception ignore) {}
         return null;
         // response: {"message":"Successfully emptied"}
-        return body;
     }
 
     public String updateBucket(String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
@@ -135,7 +135,6 @@ public class StorageClient {
         } catch (Exception ignore) {}
         return null;
         // response = {"message":"Successfully updated"}
-        return body;
     }
 
     public List<FileObject> listFilesInBucket(final String bucketId, final String folderId) {
