@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageClientTest {
 
-    final String testBucketId = "test-bucket-4";
+    final String testBucketId = "test-bucket-" + System.currentTimeMillis();
 
     StorageClient storageClient;
 
