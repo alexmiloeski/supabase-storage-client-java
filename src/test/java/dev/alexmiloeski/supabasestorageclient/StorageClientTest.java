@@ -1,6 +1,8 @@
 package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
 
@@ -8,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageClientTest {
 
@@ -15,7 +18,7 @@ class StorageClientTest {
 
     StorageClient storageClient;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         Dotenv dotenv = Dotenv.load();
         String projectId = dotenv.get("SUPABASE_STORAGE_PROJECT_ID");
