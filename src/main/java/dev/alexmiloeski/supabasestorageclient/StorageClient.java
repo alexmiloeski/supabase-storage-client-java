@@ -139,12 +139,23 @@ public class StorageClient {
 
     public List<FileObject> listFilesInBucket(final String bucketId, final String folderId) {
         // POST url/storage/v1/object/list/test-bucket-1
+    public List<FileObject> listFilesInBucket(final String bucketId, final ListFilesOptions options) {
+        int limit = 100;
+        int offset = 0;
+        String folderId = "";
+        if (options != null) {
+            if (options.limit() != null) limit = options.limit();
+            if (options.offset() != null) offset = options.offset();
+            if (options.folderId() != null) folderId = options.folderId();
+        }
         String body = newRequest()
                 .object()
                 .path("/list/" + bucketId)
                 .post("""
                         {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
                         .formatted(folderId))
+                        {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
+                        .formatted(limit, offset, folderId))
                 .jsonContent()
                 .make();
         return Mapper.toObjects(body);
@@ -152,7 +163,7 @@ public class StorageClient {
     }
 
     public List<FileObject> listFilesInBucket(final String bucketId) {
-        return listFilesInBucket(bucketId, "");
+        return listFilesInBucket(bucketId, null);
     }
 
     public String downloadFile(final String bucketId, final String fileId) {
