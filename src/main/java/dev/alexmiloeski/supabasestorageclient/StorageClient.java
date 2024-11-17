@@ -146,7 +146,7 @@ public class StorageClient {
                     .jsonContent()
                     .makeWithWrapper();
             if (rw.body() != null) {
-                Bucket bucket = Mapper.toBucket(rw.body());
+                Bucket bucket = Mapper.toBucket((String) rw.body());
                 return new ResponseWrapper(bucket.name(), null, null);
             }
             return rw;
