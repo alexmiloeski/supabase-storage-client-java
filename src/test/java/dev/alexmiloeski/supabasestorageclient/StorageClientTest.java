@@ -1,6 +1,8 @@
 package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
 
@@ -38,6 +40,57 @@ class StorageClientTest {
     void createBucketWithDuplicateNameShouldReturnNull() {
         String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
         assertNull(testBucketIdRes);
+    }
+
+    @Test
+    @Order(10)
+    @Disabled
+    void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
+        ResponseWrapper responseWrapper = storageClient.createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        assertEquals(testBucketId, responseWrapper.body());
+    }
+
+    @Test
+    @Order(15)
+    @Disabled
+    void createBucketWithDuplicateNameReturnsErrorResponse() {
+        String statusCode = "409";
+        String error = "Duplicate";
+        String message = "The resource already exists";
+
+        ResponseWrapper responseWrapper = storageClient
+                .createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(statusCode, errorResponse.statusCode());
+        assertEquals(error, errorResponse.error());
+        assertEquals(message, errorResponse.message());
+    }
+
+    @Test
+    @Order(10)
+    @Disabled
+    void createBucketWithWrapperWithInvalidNameReturnsErrorResponse() {
+        ResponseWrapper responseWrapper = storageClient.createBucketWithWrapper(null, null, false, null, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("400", errorResponse.statusCode());
+        assertNotNull(errorResponse.error());
+        assertFalse(errorResponse.error().isEmpty());
+        assertNotNull(errorResponse.message());
+        assertFalse(errorResponse.message().isEmpty());
     }
 
     @Test
