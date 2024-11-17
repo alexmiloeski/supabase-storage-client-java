@@ -140,6 +140,38 @@ public class StorageClient {
     }
 
     /**
+     * REST GET url/storage/v1/bucket/some-bucket
+     * REST response body example:
+     * {
+     *     "id": "test-bucket",
+     *     "name": "test-bucket",
+     *     "owner": "",
+     *     "public": false,
+     *     "file_size_limit": null,
+     *     "allowed_mime_types": null,
+     *     "created_at": "2024-11-12T19:13:16.984Z",
+     *     "updated_at": "2024-11-12T19:13:16.984Z"
+     * }
+     */
+    public ResponseWrapper<Bucket> getBucketWithWrapper(final String bucketId) {
+        try {
+            ResponseWrapper<String> rw = newRequest()
+                    .bucket()
+                    .path(bucketId)
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                Bucket bucket = Mapper.toBucket(rw.body());
+                return new ResponseWrapper<>(bucket, null, null);
+            }
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    /**
      * REST POST url/storage/v1/bucket
      * REST request body example:
      * {
