@@ -95,9 +95,6 @@ class RequestMaker {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response == null || response.statusCode() < 200 || response.statusCode() > 299) {
-                return null;
-            }
             return response.body();
         } catch (IOException | InterruptedException e) {
 //            throw new RuntimeException(e);
