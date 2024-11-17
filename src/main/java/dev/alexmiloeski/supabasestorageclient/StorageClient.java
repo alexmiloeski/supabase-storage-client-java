@@ -313,6 +313,29 @@ public class StorageClient {
     }
 
     /**
+     * REST POST url/storage/v1/bucket/some-bucket/empty
+     * REST response body example: {"message":"Successfully emptied"}
+     */
+    public ResponseWrapper<String> emptyBucketWithWrapper(String id) {
+        try {
+            ResponseWrapper<String> rw = newRequest()
+                    .bucket()
+                    .post()
+                    .path(id + "/empty")
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("message"), null, null);
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    /**
      * REST PUT url/storage/v1/bucket/test-bucket
      * REST request body example:
      *  {
