@@ -133,6 +133,21 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(25)
+    @Disabled
+    void getBucketWithWrapper() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(testBucketId);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        Bucket bucket = responseWrapper.body();
+        assertNotNull(bucket);
+        assertEquals(testBucketId, bucket.id());
+    }
+
+    @Test
     @Order(30)
     @Disabled
     void emptyBucket() throws InterruptedException {
