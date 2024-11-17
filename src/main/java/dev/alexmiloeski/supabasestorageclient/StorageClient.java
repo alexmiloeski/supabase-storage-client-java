@@ -99,20 +99,20 @@ public class StorageClient {
      *     }
      * ]
      */
-    public ResponseWrapper listBucketsWithWrapper() {
+    public ResponseWrapper<List<Bucket>> listBucketsWithWrapper() {
         try {
-            ResponseWrapper rw = newRequest()
+            ResponseWrapper<String> rw = newRequest()
                     .bucket()
                     .makeWithWrapper();
             if (rw.body() != null) {
-                List<Bucket> buckets = Mapper.toBuckets((String) rw.body());
-                return new ResponseWrapper(buckets, null, null);
+                List<Bucket> buckets = Mapper.toBuckets(rw.body());
+                return new ResponseWrapper<>(buckets, null, null);
             }
-            return rw;
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
-            return new ResponseWrapper(null, null, e.getMessage());
+            return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
 
@@ -192,7 +192,7 @@ public class StorageClient {
      *     "name": "test-bucket"
      * }
      */
-    public ResponseWrapper createBucketWithWrapper(String id, String name, boolean isPublic,
+    public ResponseWrapper<String> createBucketWithWrapper(String id, String name, boolean isPublic,
                                                    Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
         Bucket newBucket = new Bucket(
@@ -200,20 +200,20 @@ public class StorageClient {
         String json;
         try {
             json = Mapper.mapper.writeValueAsString(newBucket);
-            ResponseWrapper rw = newRequest()
+            ResponseWrapper<String> rw = newRequest()
                     .bucket()
                     .post(json)
                     .jsonContent()
                     .makeWithWrapper();
             if (rw.body() != null) {
-                Bucket bucket = Mapper.toBucket((String) rw.body());
-                return new ResponseWrapper(bucket.name(), null, null);
+                Bucket bucket = Mapper.toBucket(rw.body());
+                return new ResponseWrapper<>(bucket.name(), null, null);
             }
             return rw;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
-            return new ResponseWrapper(null, null, e.getMessage());
+            return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
 
