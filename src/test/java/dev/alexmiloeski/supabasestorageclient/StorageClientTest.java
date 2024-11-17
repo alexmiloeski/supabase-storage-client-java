@@ -105,6 +105,23 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(20)
+    @Disabled
+    void listBucketsWithWrapper() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper responseWrapper = storageClient.listBucketsWithWrapper();
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        List<Bucket> buckets = (List<Bucket>) responseWrapper.body();
+        assertNotNull(buckets);
+        assertInstanceOf(List.class, buckets);
+        assertTrue(buckets.size() > 1);
+        assertTrue(buckets.stream().anyMatch(b -> testBucketId.equals(b.name())));
+    }
+
+    @Test
     @Order(25)
     @Disabled
     void getBucket() throws InterruptedException {
