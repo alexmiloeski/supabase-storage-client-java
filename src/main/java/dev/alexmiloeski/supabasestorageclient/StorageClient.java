@@ -270,6 +270,29 @@ public class StorageClient {
     }
 
     /**
+     * REST DELETE url/storage/v1/bucket/some-bucket
+     * REST response body example: {"message":"Successfully deleted"}
+     */
+    public ResponseWrapper<String> deleteBucketWithWrapper(String id) {
+        try {
+            ResponseWrapper<String> rw = newRequest()
+                    .bucket()
+                    .delete()
+                    .path(id)
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("message"), null, null);
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    /**
      * REST POST url/storage/v1/bucket/some-bucket/empty
      * REST response body example: {"message":"Successfully emptied"}
      */
