@@ -132,6 +132,21 @@ public class StorageClient {
         return bucket == null ? null : bucket.name();
     }
 
+    /**
+     * REST POST url/storage/v1/bucket
+     * REST request body example:
+     * {
+     *   "id": "test-bucket",
+     *   "name": "test-bucket",
+     *   "public": true,
+     *   "file_size_limit": 0,
+     *   "allowed_mime_types": ["image/jpeg"]
+     * }
+     * REST response body example:
+     * {
+     *     "name": "test-bucket"
+     * }
+     */
     public ResponseWrapper createBucketWithWrapper(String id, String name, boolean isPublic,
                                                    Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
