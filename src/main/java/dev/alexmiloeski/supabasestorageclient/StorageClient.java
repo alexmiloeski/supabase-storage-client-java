@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 
 import java.util.HashMap;
 import java.util.List;
