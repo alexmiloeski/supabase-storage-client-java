@@ -377,6 +377,50 @@ public class StorageClient {
     }
 
     /**
+     * REST PUT url/storage/v1/bucket/test-bucket
+     * REST request body example:
+     *  {
+     *   "id": "test-bucket",
+     *   "name": "test-bucket",
+     *   "public": false,
+     *   "file_size_limit": 0,
+     *   "allowed_mime_types": ["image/jpeg"]
+     * }
+     * REST response body example: {"message":"Successfully updated"}
+     */
+    public ResponseWrapper<String> updateBucketWithWrapper(
+            String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
+
+        Bucket newBucket = new Bucket(
+                null, null, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
+        String json;
+        try {
+            json = Mapper.mapper.writeValueAsString(newBucket);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+        try {
+            ResponseWrapper<String> rw = newRequest()
+                    .bucket()
+                    .put(json)
+                    .jsonContent()
+                    .path(id)
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("message"), null, null);
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    /**
      * Use this method if you want to list all files in the bucket with the possibility of
      * specifying custom values for any of the following: folder prefix, offset, and limit.
      * If you want to leave any of them to the default value, just pass null for that field.
