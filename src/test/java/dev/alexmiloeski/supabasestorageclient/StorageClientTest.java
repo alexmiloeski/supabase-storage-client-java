@@ -46,7 +46,8 @@ class StorageClientTest {
     @Order(10)
     @Disabled
     void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
-        ResponseWrapper responseWrapper = storageClient.createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -55,14 +56,14 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(15)
+    @Order(14)
     @Disabled
-    void createBucketWithDuplicateNameReturnsErrorResponse() {
+    void createBucketWithWrapperWithDuplicateNameReturnsErrorResponse() {
         String statusCode = "409";
         String error = "Duplicate";
         String message = "The resource already exists";
 
-        ResponseWrapper responseWrapper = storageClient
+        ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
 
         assertNotNull(responseWrapper);
@@ -76,10 +77,11 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(10)
+    @Order(17)
     @Disabled
     void createBucketWithWrapperWithInvalidNameReturnsErrorResponse() {
-        ResponseWrapper responseWrapper = storageClient.createBucketWithWrapper(null, null, false, null, null);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .createBucketWithWrapper(null, null, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -109,14 +111,13 @@ class StorageClientTest {
     @Disabled
     void listBucketsWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper responseWrapper = storageClient.listBucketsWithWrapper();
+        ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
-        List<Bucket> buckets = (List<Bucket>) responseWrapper.body();
+        List<Bucket> buckets = responseWrapper.body();
         assertNotNull(buckets);
-        assertInstanceOf(List.class, buckets);
         assertTrue(buckets.size() > 1);
         assertTrue(buckets.stream().anyMatch(b -> testBucketId.equals(b.name())));
     }
