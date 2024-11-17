@@ -106,7 +106,7 @@ class RequestMaker {
         return null;
     }
 
-    ResponseWrapper makeWithWrapper() {
+    ResponseWrapper<String> makeWithWrapper() {
         final String _path = path == null ? "" : "/" + path;
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(apiUrl + STORAGE_PATH + resource + _path));
@@ -128,14 +128,14 @@ class RequestMaker {
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 400) {
-                return new ResponseWrapper(null, Mapper.toErrorResponse(response.body()), null);
+                return new ResponseWrapper<>(null, Mapper.toErrorResponse(response.body()), null);
             }
-            return new ResponseWrapper(response.body(), null, null);
+            return new ResponseWrapper<>(response.body(), null, null);
         } catch (IOException | InterruptedException e) {
 //            throw new RuntimeException(e);
             e.printStackTrace();
             System.out.println("IOException YO!");
-            return new ResponseWrapper(null, null, e.getMessage());
+            return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
 
