@@ -178,6 +178,21 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(50)
+    @Disabled
+    void deleteBucketWithWrapper() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        String message = responseWrapper.body();
+        assertNotNull(message);
+        assertFalse(message.isEmpty());
+    }
+
+    @Test
     @Order(60)
     @Disabled
     void healthCheck() {
