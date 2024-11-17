@@ -183,6 +183,22 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(40)
+    @Disabled
+    void updateBucketWithWrapper() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .updateBucketWithWrapper(testBucketId, false, 0, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        String message = responseWrapper.body();
+        assertNotNull(message);
+        assertFalse(message.isEmpty());
+    }
+
+    @Test
     @Order(50)
     @Disabled
     void deleteBucket() throws InterruptedException {
