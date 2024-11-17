@@ -1,5 +1,7 @@
 package dev.alexmiloeski.supabasestorageclient;
 
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -102,6 +104,39 @@ class RequestMaker {
             System.out.println("IOException YO!");
         }
         return null;
+    }
+
+    ResponseWrapper makeWithWrapper() {
+        final String _path = path == null ? "" : "/" + path;
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl + STORAGE_PATH + resource + _path));
+        if (apiKey != null) {
+            builder = builder.header("Authorization", "Bearer " + apiKey);
+        }
+        if (contentType != null) {
+            builder = builder.header("Content-Type", contentType);
+        }
+        builder = switch (method) {
+            default -> builder.GET();
+            case POST -> builder.POST(body);
+            case PUT -> builder.PUT(body);
+            case DELETE -> builder.DELETE();
+        };
+
+        HttpRequest request = builder.build();
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() >= 400) {
+                return new ResponseWrapper(null, Mapper.toErrorResponse(response.body()), null);
+            }
+            return new ResponseWrapper(response.body(), null, null);
+        } catch (IOException | InterruptedException e) {
+//            throw new RuntimeException(e);
+            e.printStackTrace();
+            System.out.println("IOException YO!");
+            return new ResponseWrapper(null, null, e.getMessage());
+        }
     }
 
     private enum Methods {
