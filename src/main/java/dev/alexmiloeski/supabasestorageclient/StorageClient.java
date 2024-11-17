@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,6 @@ public class StorageClient {
      */
     public String createBucket(String id, String name, boolean isPublic,
                                Integer fileSizeLimit, List<String> allowedMimeTypes) {
-        // POST url/storage/v1/bucket
         Bucket newBucket = new Bucket(
                 id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
         String json;
@@ -130,6 +130,31 @@ public class StorageClient {
         // todo: if mapper throws, return error response with exception
         System.out.println("bucket = " + bucket);
         return bucket == null ? null : bucket.name();
+    }
+
+    public ResponseWrapper createBucketWithWrapper(String id, String name, boolean isPublic,
+                                                   Integer fileSizeLimit, List<String> allowedMimeTypes) {
+        // POST url/storage/v1/bucket
+        Bucket newBucket = new Bucket(
+                id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
+        String json;
+        try {
+            json = Mapper.mapper.writeValueAsString(newBucket);
+            ResponseWrapper rw = newRequest()
+                    .bucket()
+                    .post(json)
+                    .jsonContent()
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                Bucket bucket = Mapper.toBucket(rw.body());
+                return new ResponseWrapper(bucket.name(), null, null);
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper(null, null, e.getMessage());
+        }
     }
 
     /**
