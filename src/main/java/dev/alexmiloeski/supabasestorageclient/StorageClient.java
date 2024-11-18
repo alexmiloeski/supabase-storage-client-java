@@ -520,7 +520,11 @@ public class StorageClient {
                 .object()
                 .path(bucketId + "/" + fileId)
                 .make();
-//        return Mapper.toBucket(response.body());
+    }
+
+    public byte[] downloadFileBytes(final String bucketId, final String fileId) {
+        String fileString = downloadFile(bucketId, fileId);
+        return fileString.getBytes();
     }
 
     private RequestMaker newRequest() {
