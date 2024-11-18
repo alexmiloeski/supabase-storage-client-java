@@ -471,7 +471,7 @@ public class StorageClient {
      *     }
      * ]</pre>
      */
-    public List<FileObject> listFilesInBucket(final String bucketId, final ListFilesOptions options) {
+    public ResponseWrapper<List<FileObject>> listFilesInBucket(final String bucketId, final ListFilesOptions options) {
         int limit = 100;
         int offset = 0;
         String folderId = "";
@@ -480,16 +480,25 @@ public class StorageClient {
             if (options.offset() != null) offset = options.offset();
             if (options.folderId() != null) folderId = options.folderId();
         }
-        String body = newRequest()
-                .object()
-                .path("/list/" + bucketId)
-                .post("""
+        try {
+            ResponseWrapper<String> rw = newRequest()
+                    .object()
+                    .path("/list/" + bucketId)
+                    .post("""
                         {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
-                        .formatted(limit, offset, folderId))
-                .jsonContent()
-                .make();
-        return Mapper.toObjects(body);
-        // todo: if mapper throws, return error response with exception
+                            .formatted(limit, offset, folderId))
+                    .jsonContent()
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                List<FileObject> objects = Mapper.toObjects(rw.body());
+                return new ResponseWrapper<>(objects, null, null);
+            }
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
     }
 
     /**
@@ -499,7 +508,7 @@ public class StorageClient {
      * <br> - limit 100
      * <br><br>For custom options, see {@link #listFilesInBucket(String, ListFilesOptions)}
      */
-    public List<FileObject> listFilesInBucket(final String bucketId) {
+    public ResponseWrapper<List<FileObject>> listFilesInBucket(final String bucketId) {
         return listFilesInBucket(bucketId, null);
     }
 
