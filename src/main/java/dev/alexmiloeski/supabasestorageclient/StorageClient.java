@@ -514,6 +514,18 @@ public class StorageClient {
 
     /**
      * REST GET url/storage/v1/object/test-bucket/some-file
+     * REST error response body for wrong file name:
+     * {
+     *     "statusCode": "404",
+     *     "error": "not_found",
+     *     "message": "Object not found"
+     * }
+     * REST error response body for wrong bucket name:
+     * {
+     *     "statusCode": "404",
+     *     "error": "Bucket not found",
+     *     "message": "Bucket not found"
+     * }
      */
     public String downloadFile(final String bucketId, final String fileId) {
         return newRequest()
