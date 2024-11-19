@@ -148,7 +148,7 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(30)
+    @Order(210)
     @Disabled
     void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
@@ -158,7 +158,7 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(30)
+    @Order(210)
     @Disabled
     void emptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
@@ -199,7 +199,7 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(50)
+    @Order(200)
     @Disabled
     void deleteBucket() throws InterruptedException {
         Thread.sleep(100);
@@ -209,9 +209,26 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(50)
+    @Order(200)
     @Disabled
-    void deleteBucketWithWrapper() throws InterruptedException {
+    void deleteNonEmptyBucketWithWrapperReturnsError() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("409", errorResponse.statusCode());
+        assertEquals("InvalidRequest", errorResponse.error());
+        assertEquals("The bucket you tried to delete is not empty", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(220)
+    @Disabled
+    void deleteEmptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
 
