@@ -527,16 +527,19 @@ public class StorageClient {
      *     "message": "Bucket not found"
      * }
      */
-    public String downloadFile(final String bucketId, final String fileId) {
+    public ResponseWrapper<String> downloadFile(final String bucketId, final String fileId) {
         return newRequest()
                 .object()
                 .path(bucketId + "/" + fileId)
-                .make();
+                .makeWithWrapper();
     }
 
-    public byte[] downloadFileBytes(final String bucketId, final String fileId) {
-        String fileString = downloadFile(bucketId, fileId);
-        return fileString.getBytes();
+    public ResponseWrapper<byte[]> downloadFileBytes(final String bucketId, final String fileId) {
+        ResponseWrapper<String> rw = downloadFile(bucketId, fileId);
+        if (rw.hasBody()) {
+            return new ResponseWrapper<>(rw.body().getBytes(), null, null);
+        }
+        return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
     }
 
     private RequestMaker newRequest() {
