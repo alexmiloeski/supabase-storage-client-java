@@ -1,12 +1,15 @@
 package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
+import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class StorageClientTest {
 
     final String testBucketId = "test-bucket-" + System.currentTimeMillis();
+    final String testFileId = "test-file-" + System.currentTimeMillis();
+    final String testFolderId = "test-folder-" + System.currentTimeMillis();
+    final String nonexistentFileId = "test-bucket";
+    final String nonexistentBucketId = "nonexistent-bucket";
+    final String testFileContents = "Test file contents.";
 
     StorageClient storageClient;
 
@@ -237,6 +245,118 @@ class StorageClientTest {
         assertNotNull(message);
         assertFalse(message.isEmpty());
         assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(55)
+    @Disabled
+    void uploadFile() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertFalse(responseWrapper.body().isEmpty());
+        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body()));
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+    @Test
+    @Order(60)
+    @Disabled
+    void listFilesInBucket() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(testBucketId);
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertFalse(responseWrapper.body().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(62)
+    @Disabled
+    void listFilesInBucketWithFolder() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(
+                testBucketId,
+                new ListFilesOptions(testFolderId, null, null));
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertFalse(responseWrapper.body().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(70)
+    @Disabled
+    void downloadFile() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .downloadFile(testBucketId, testFileId);
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertEquals(testFileContents, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(71)
+    @Disabled
+    void downloadFileBytes() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<byte[]> responseWrapper = storageClient
+                .downloadFileBytes(testBucketId, testFileId);
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        final String stringBody = new String(responseWrapper.body());
+        assertEquals(testFileContents, stringBody);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(72)
+    @Disabled
+    void downloadFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .downloadFile(nonexistentBucketId, nonexistentFileId);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("Bucket not found", errorResponse.error());
+        assertEquals("Bucket not found", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(72)
+    @Disabled
+    void downloadFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .downloadFile(testBucketId, nonexistentFileId);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("not_found", errorResponse.error());
+        assertEquals("Object not found", errorResponse.message());
+        assertNull(responseWrapper.body());
         assertNull(responseWrapper.exception());
     }
 
