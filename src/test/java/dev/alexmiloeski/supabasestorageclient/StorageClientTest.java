@@ -216,11 +216,11 @@ class StorageClientTest {
         ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
 
         assertNotNull(responseWrapper);
-        assertNull(responseWrapper.errorResponse());
-        assertNull(responseWrapper.exception());
         String message = responseWrapper.body();
         assertNotNull(message);
         assertFalse(message.isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
