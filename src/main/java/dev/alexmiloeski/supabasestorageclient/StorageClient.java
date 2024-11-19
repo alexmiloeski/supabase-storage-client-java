@@ -100,10 +100,10 @@ public class StorageClient {
      * ]
      */
     public ResponseWrapper<List<Bucket>> listBucketsWithWrapper() {
+        ResponseWrapper<String> rw = newRequest()
+                .bucket()
+                .makeWithWrapper();
         try {
-            ResponseWrapper<String> rw = newRequest()
-                    .bucket()
-                    .makeWithWrapper();
             if (rw.body() != null) {
                 List<Bucket> buckets = Mapper.toBuckets(rw.body());
                 return new ResponseWrapper<>(buckets, null, null);
@@ -274,12 +274,12 @@ public class StorageClient {
      * REST response body example: {"message":"Successfully deleted"}
      */
     public ResponseWrapper<String> deleteBucketWithWrapper(String id) {
+        ResponseWrapper<String> rw = newRequest()
+                .bucket()
+                .delete()
+                .path(id)
+                .makeWithWrapper();
         try {
-            ResponseWrapper<String> rw = newRequest()
-                    .bucket()
-                    .delete()
-                    .path(id)
-                    .makeWithWrapper();
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
                 return new ResponseWrapper<>(resMap.get("message"), null, null);
@@ -317,12 +317,12 @@ public class StorageClient {
      * REST response body example: {"message":"Successfully emptied"}
      */
     public ResponseWrapper<String> emptyBucketWithWrapper(String id) {
+        ResponseWrapper<String> rw = newRequest()
+                .bucket()
+                .post()
+                .path(id + "/empty")
+                .makeWithWrapper();
         try {
-            ResponseWrapper<String> rw = newRequest()
-                    .bucket()
-                    .post()
-                    .path(id + "/empty")
-                    .makeWithWrapper();
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
                 return new ResponseWrapper<>(resMap.get("message"), null, null);
@@ -401,13 +401,13 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
+        ResponseWrapper<String> rw = newRequest()
+                .bucket()
+                .put(json)
+                .jsonContent()
+                .path(id)
+                .makeWithWrapper();
         try {
-            ResponseWrapper<String> rw = newRequest()
-                    .bucket()
-                    .put(json)
-                    .jsonContent()
-                    .path(id)
-                    .makeWithWrapper();
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
                 return new ResponseWrapper<>(resMap.get("message"), null, null);
@@ -480,15 +480,15 @@ public class StorageClient {
             if (options.offset() != null) offset = options.offset();
             if (options.folderId() != null) folderId = options.folderId();
         }
-        try {
-            ResponseWrapper<String> rw = newRequest()
-                    .object()
-                    .path("/list/" + bucketId)
-                    .post("""
+        ResponseWrapper<String> rw = newRequest()
+                .object()
+                .path("/list/" + bucketId)
+                .post("""
                         {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
-                            .formatted(limit, offset, folderId))
-                    .jsonContent()
-                    .makeWithWrapper();
+                        .formatted(limit, offset, folderId))
+                .jsonContent()
+                .makeWithWrapper();
+        try {
             if (rw.body() != null) {
                 List<FileObject> objects = Mapper.toObjects(rw.body());
                 return new ResponseWrapper<>(objects, null, null);
