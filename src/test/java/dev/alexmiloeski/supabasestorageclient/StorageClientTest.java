@@ -354,6 +354,38 @@ class StorageClientTest {
     }
 
     @Test
+    @Order(83)
+    @Disabled
+    void deleteFile() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteFile(testBucketId, testFileId);
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertEquals("Successfully deleted", responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(81)
+    @Disabled
+    void deleteFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .deleteFile(testBucketId, nonexistentFileId);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("not_found", errorResponse.error());
+        assertEquals("Object not found", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
     @Order(60)
     @Disabled
     void healthCheck() {
