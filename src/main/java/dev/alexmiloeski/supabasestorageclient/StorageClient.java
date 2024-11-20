@@ -579,6 +579,39 @@ public class StorageClient {
         }
     }
 
+    /**
+     * REST DELETE url/storage/v1/object/test-bucket/some-file
+     * REST response body:
+     * {
+     *   "message": "Successfully deleted"
+     * }
+     * REST error response body for nonexistent file name:
+     * {
+     *   "statusCode": "404",
+     *   "error": "not_found",
+     *   "message": "Object not found"
+     * }
+     */
+    public ResponseWrapper<String> deleteFile(final String bucketId, final String fileId) {
+        ResponseWrapper<String> rw = newRequest()
+                .object()
+                .path(bucketId + "/" + fileId)
+                .delete()
+                .makeWithWrapper();
+        try {
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("message"), null, null);
+                // todo: might wanna replace with record with message only
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
     private RequestMaker newRequest() {
         return new RequestMaker(apiUrl, apiKey);
     }
