@@ -327,7 +327,7 @@ class StorageClientTest {
     @Test
     @Order(72)
     @Disabled
-    void downloadFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
+    void downloadFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
                 .downloadFile(nonexistentBucketId, nonexistentFileId);
@@ -345,7 +345,7 @@ class StorageClientTest {
     @Test
     @Order(72)
     @Disabled
-    void downloadFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
+    void downloadFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
                 .downloadFile(testBucketId, nonexistentFileId);
