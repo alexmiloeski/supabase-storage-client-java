@@ -64,9 +64,18 @@ class RequestMaker {
         return this;
     }
 
-    RequestMaker put(String body) {
+    RequestMaker put(Object body) {
         this.method = Methods.PUT;
-        this.body = body == null ? HttpRequest.BodyPublishers.noBody() :  HttpRequest.BodyPublishers.ofString(body);
+        // note: can't use enhanced switch with pattern matching in Java 17
+        if (body == null) {
+            this.body = HttpRequest.BodyPublishers.noBody();
+        } else if (body instanceof String sBody) {
+            this.body = HttpRequest.BodyPublishers.ofString(sBody);
+        } else if (body instanceof byte[] baBody) {
+            this.body = HttpRequest.BodyPublishers.ofByteArray(baBody);
+        } else {
+            throw new IllegalArgumentException("POST body can only be String or byte array");
+        }
         return this;
     }
 
