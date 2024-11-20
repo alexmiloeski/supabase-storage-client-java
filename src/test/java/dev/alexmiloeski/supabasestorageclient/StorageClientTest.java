@@ -156,7 +156,7 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(210)
+    @Order(200)
     @Disabled
     void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
@@ -166,7 +166,7 @@ class StorageClientTest {
     }
 
     @Test
-    @Order(210)
+    @Order(200)
     @Disabled
     void emptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
@@ -202,16 +202,6 @@ class StorageClientTest {
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
         String message = responseWrapper.body();
-        assertNotNull(message);
-        assertFalse(message.isEmpty());
-    }
-
-    @Test
-    @Order(200)
-    @Disabled
-    void deleteBucket() throws InterruptedException {
-        Thread.sleep(100);
-        String message = storageClient.deleteBucket(testBucketId);
         assertNotNull(message);
         assertFalse(message.isEmpty());
     }
@@ -263,6 +253,9 @@ class StorageClientTest {
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
+
+    // todo: upload file with folder (prefix)
+
     @Test
     @Order(60)
     @Disabled
