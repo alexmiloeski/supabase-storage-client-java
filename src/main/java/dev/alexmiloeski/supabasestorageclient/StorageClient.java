@@ -544,7 +544,7 @@ public class StorageClient {
 
     /**
      * REST POST url/storage/v1/object/test-bucket/some-file
-     * REST response body:
+     * REST response body example:
      * {"Key":"test-bucket/some-file","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
      * REST error response body for duplicate file name:
      * {
@@ -552,7 +552,7 @@ public class StorageClient {
      *     "error": "Duplicate",
      *     "message": "The resource already exists"
      * }
-     * REST error response body for wrong bucket name:
+     * REST error response body example for wrong bucket name:
      * {
      *     "statusCode": "404",
      *     "error": "Bucket not found",
