@@ -23,6 +23,7 @@ class StorageClientTest {
     final String nonexistentFileId = "test-bucket";
     final String nonexistentBucketId = "nonexistent-bucket";
     final String testFileContents = "Test file contents.";
+    final String testFileModifiedContents = "Test file modified contents.";
 
     StorageClient storageClient;
 
@@ -342,6 +343,58 @@ class StorageClientTest {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
                 .downloadFile(testBucketId, nonexistentFileId);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("not_found", errorResponse.error());
+        assertEquals("Object not found", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(75)
+    @Disabled
+    void updateFile() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .updateFile(testBucketId, testFileId, testFileModifiedContents.getBytes());
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertFalse(responseWrapper.body().isEmpty());
+        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body()));
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(76)
+    @Disabled
+    void updateFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .updateFile(nonexistentBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("Bucket not found", errorResponse.error());
+        assertEquals("Bucket not found", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(76)
+    @Disabled
+    void updateFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient
+                .updateFile(testBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
