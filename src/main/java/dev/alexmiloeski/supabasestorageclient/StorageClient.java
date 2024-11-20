@@ -612,6 +612,43 @@ public class StorageClient {
         }
     }
 
+    /**
+     * REST PUT url/storage/v1/object/test-bucket/some-file
+     * REST response body example:
+     * {"Key":"test-bucket/some-file","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
+     * REST error response body example for wrong bucket name:
+     * {
+     *     "statusCode": "404",
+     *     "error": "Bucket not found",
+     *     "message": "Bucket not found"
+     * }
+     * REST error response body example for wrong file name:
+     * {
+     *     "statusCode": "404",
+     *     "error": "not_found",
+     *     "message": "Object not found"
+     * }
+     */
+    public ResponseWrapper<String> updateFile(final String bucketId, final String fileId, byte[] bytes) {
+        ResponseWrapper<String> rw = newRequest()
+                .object()
+                .path(bucketId + "/" + fileId)
+                .put(bytes)
+                .makeWithWrapper();
+        try {
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("Id"), null, null);
+                // todo: might wanna replace with record with key and id
+            }
+            return rw;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
     private RequestMaker newRequest() {
         return new RequestMaker(apiUrl, apiKey);
     }
