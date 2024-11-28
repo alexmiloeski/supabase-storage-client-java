@@ -26,7 +26,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -38,7 +38,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -49,7 +49,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -60,7 +60,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
