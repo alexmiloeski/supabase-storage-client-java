@@ -11,12 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StorageClient {
-    private final String apiUrl;
-    private final String apiKey;
+    protected final String apiUrl;
+    protected final String apiKey;
 
     public StorageClient(String projectId, String apiKey) {
         this.apiUrl = "https://" + projectId + ".supabase.co";
         this.apiKey = apiKey;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
     }
 
     public boolean isHealthy() {
@@ -649,7 +653,7 @@ public class StorageClient {
         }
     }
 
-    private RequestMaker newRequest() {
-        return new RequestMaker(apiUrl, apiKey);
+    protected RequestMaker newRequest() {
+        return new RequestMaker(apiUrl, apiKey, null);
     }
 }
