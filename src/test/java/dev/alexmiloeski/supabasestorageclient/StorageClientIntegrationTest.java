@@ -127,7 +127,6 @@ public class StorageClientIntegrationTest {
     @Test
     void deleteEmptyBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully deleted";
-
         stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_NAME)
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
@@ -154,6 +153,70 @@ public class StorageClientIntegrationTest {
         assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
         assertEquals(MOCK_ERROR, errorResponse.error());
         assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+    }
+
+    @Test
+    void emptyBucketReturnsSuccessMessage() {
+        final String expectedMessage = "Successfully emptied";
+        stubFor(post("/storage/v1/bucket/" + TEST_BUCKET_NAME + "/empty")
+                .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        assertEquals(expectedMessage, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void emptyBucketWithWrongParamsReturnsErrorResponse() {
+        stubFor(post("/storage/v1/bucket/" + TEST_BUCKET_NAME + "/empty")
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void updateBucketReturnsSuccessMessage() {
+        final String expectedMessage = "Successfully updated";
+        stubFor(put("/storage/v1/bucket/" + TEST_BUCKET_NAME)
+                .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
+
+        final ResponseWrapper<String> responseWrapper = storageClient
+                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
+
+        assertNotNull(responseWrapper);
+        assertEquals(expectedMessage, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void updateBucketWithWrongParamsReturnsErrorResponse() {
+        stubFor(put("/storage/v1/bucket/" + TEST_BUCKET_NAME)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient
+                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
     }
 
     private static class TestStorageClient extends StorageClient {
