@@ -396,10 +396,10 @@ public class StorageClient {
      * REST response body example: {"message":"Successfully updated"}
      */
     public ResponseWrapper<String> updateBucketWithWrapper(
-            String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
-
+            String id, String owner, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes
+    ) {
         Bucket newBucket = new Bucket(
-                null, null, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
+                null, null, owner, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
         String json;
         try {
             json = Mapper.mapper.writeValueAsString(newBucket);
