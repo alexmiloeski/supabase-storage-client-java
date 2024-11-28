@@ -1,7 +1,9 @@
 package dev.alexmiloeski.supabasestorageclient;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,6 +26,15 @@ class StorageClientUnitTest {
         when(mockRequestMaker.delete()).thenReturn(mockRequestMaker);
         when(mockRequestMaker.contentType(any())).thenReturn(mockRequestMaker);
         storageClient = new TestStorageClient("", "", mockRequestMaker);
+    }
+
+    @Test
+    void healthCheckReturnsHealthy() {
+        when(mockRequestMaker.make()).thenReturn(Arrange.HEALTHY_JSON);
+
+        final boolean isHealthy = storageClient.isHealthy();
+
+        assertTrue(isHealthy);
     }
 
     private static class TestStorageClient extends StorageClient {
