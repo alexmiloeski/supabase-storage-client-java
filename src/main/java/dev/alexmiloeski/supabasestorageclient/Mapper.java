@@ -19,10 +19,10 @@ class Mapper {
 
     private Mapper() {}
 
-    static Bucket toBucket(String string) {
-        if (string == null) throw new RuntimeException("received json was null");
+    static Bucket toBucket(String json) {
+        if (json == null) throw new RuntimeException("received json was null");
         try {
-            return mapper.readValue(string, Bucket.class);
+            return mapper.readValue(json, Bucket.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
@@ -30,10 +30,10 @@ class Mapper {
         }
     }
 
-    static List<Bucket> toBuckets(String string) {
-        if (string == null) return null;
+    static List<Bucket> toBuckets(String json) {
+        if (json == null) return null;
         try {
-            return mapper.readValue(string, new TypeReference<>() {
+            return mapper.readValue(json, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -42,10 +42,10 @@ class Mapper {
         }
     }
 
-    static List<FileObject> toObjects(String string) {
-        if (string == null) return null;
+    static List<FileObject> toObjects(String json) {
+        if (json == null) return null;
         try {
-            return mapper.readValue(string, new TypeReference<>() {});
+            return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
@@ -53,10 +53,10 @@ class Mapper {
         }
     }
 
-    static ErrorResponse toErrorResponse(String string) {
-        if (string == null) return null;
+    static ErrorResponse toErrorResponse(String json) {
+        if (json == null) return null;
         try {
-            return mapper.readValue(string, new TypeReference<>() {});
+            return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
