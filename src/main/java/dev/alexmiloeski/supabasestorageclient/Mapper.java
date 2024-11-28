@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 
 import java.util.List;
 
@@ -60,6 +61,17 @@ class Mapper {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    static FileObjectIdentity toIdentity(String json) {
+        if (json == null) return null;
+        try {
+            return mapper.readValue(json, new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("COULDN'T MAP YO!");
+            throw new RuntimeException(e);
         }
     }
 }
