@@ -14,6 +14,8 @@ class Mapper {
 
     // todo: replace RuntimeException with MapperException
 
+    // todo: there's a lot of repeated code that can be extracted
+
     private Mapper() {}
 
     static Bucket toBucket(String string) {

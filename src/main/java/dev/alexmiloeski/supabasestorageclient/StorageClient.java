@@ -197,6 +197,7 @@ public class StorageClient {
         String json;
         try {
             json = Mapper.mapper.writeValueAsString(newBucket);
+            // todo: put the mapper functions (using the Mapper) inside the DTO classes
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
