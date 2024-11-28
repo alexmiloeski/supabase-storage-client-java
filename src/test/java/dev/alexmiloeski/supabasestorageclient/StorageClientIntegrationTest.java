@@ -2,13 +2,14 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static dev.alexmiloeski.supabasestorageclient.Arrange.*;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @WireMockTest
 public class StorageClientIntegrationTest {
@@ -45,6 +46,42 @@ public class StorageClientIntegrationTest {
 
         boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
+    }
+
+    @Test
+    void createBucketWithValidNameReturnsBodyWithName() {
+        stubFor(post("/storage/v1/bucket").willReturn(ok().withBody(BUCKET_CREATED_JSON_RESPONSE)));
+
+        ResponseWrapper<String> responseWrapper = storageClient
+                .createBucketWithWrapper(TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+        assertEquals(TEST_BUCKET_NAME, responseWrapper.body());
+    }
+
+    @Test
+    void createBucketWithDuplicateNameReturnsErrorResponse() {
+        String statusCode = "409";
+        String error = "Duplicate";
+        String message = "The resource already exists";
+        final String bucketDuplicateNameJson = """
+                {"statusCode":"%s","error":"%s","message":"%s"}""".formatted(statusCode, error, message);
+
+        stubFor(post("/storage/v1/bucket").willReturn(badRequest().withBody(bucketDuplicateNameJson)));
+
+        ResponseWrapper<String> responseWrapper = storageClient
+                .createBucketWithWrapper(TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(statusCode, errorResponse.statusCode());
+        assertEquals(error, errorResponse.error());
+        assertEquals(message, errorResponse.message());
     }
 
     private static class TestStorageClient extends StorageClient {
