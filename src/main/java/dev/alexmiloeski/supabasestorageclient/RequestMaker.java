@@ -14,16 +14,12 @@ class RequestMaker {
     private static final String OBJECT_PATH = "/object";
 
     private final String apiUrl;
+    private final String apiKey;
     private String resource = "";
     private String path;
-    private String apiKey;
     private Methods method = Methods.GET;
     private String contentType;
     private HttpRequest.BodyPublisher body;
-
-    RequestMaker(String apiUrl) {
-        this.apiUrl = apiUrl;
-    }
 
     RequestMaker(String apiUrl, String apiKey) {
         this.apiUrl = apiUrl;
