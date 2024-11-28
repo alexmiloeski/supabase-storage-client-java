@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
@@ -647,6 +648,38 @@ public class StorageClient {
                 return new ResponseWrapper<>(identity, null, null);
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    /**
+     * REST POST url/storage/v1/object/move
+     * REST response body: {"message": "Successfully moved"}
+     * REST error response body example for wrong file name:
+     * {
+     *     "statusCode": "404",
+     *     "error": "not_found",
+     *     "message": "Object not found"
+     * }
+     */
+    public ResponseWrapper<String> moveFile(FileMoveOptions moveOptions) {
+        try {
+            String json = moveOptions.toJson();
+            ResponseWrapper<String> rw = newRequest()
+                    .object()
+                    .path("move")
+                    .post(json)
+                    .jsonContent()
+                    .makeWithWrapper();
+            if (rw.body() != null) {
+                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                return new ResponseWrapper<>(resMap.get("message"), null, null);
+                // todo: might wanna replace with record with message only
+            }
+            return rw;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
