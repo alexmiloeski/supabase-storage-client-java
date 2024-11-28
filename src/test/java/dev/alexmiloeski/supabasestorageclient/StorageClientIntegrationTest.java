@@ -28,7 +28,7 @@ public class StorageClientIntegrationTest {
     void healthCheckReturnsTrue() {
         stubFor(get("/storage/v1/health").willReturn(ok().withBody(HEALTHY_JSON)));
 
-        boolean isHealthy = storageClient.isHealthy();
+        final boolean isHealthy = storageClient.isHealthy();
         assertTrue(isHealthy);
     }
 
@@ -36,7 +36,7 @@ public class StorageClientIntegrationTest {
     void healthCheckReturnsFalseWhenServerSaysFalse() {
         stubFor(get("/storage/v1/health").willReturn(ok().withBody(UNHEALTHY_JSON)));
 
-        boolean isHealthy = storageClient.isHealthy();
+        final boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
     }
 
@@ -44,7 +44,7 @@ public class StorageClientIntegrationTest {
     void healthCheckReturnsFalseWhenServerErrors() {
         stubFor(get("/storage/v1/health").willReturn(serverError()));
 
-        boolean isHealthy = storageClient.isHealthy();
+        final boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
     }
 
@@ -52,7 +52,7 @@ public class StorageClientIntegrationTest {
     void createBucketWithValidNameReturnsBodyWithName() {
         stubFor(post("/storage/v1/bucket").willReturn(ok().withBody(BUCKET_CREATED_JSON_RESPONSE)));
 
-        ResponseWrapper<String> responseWrapper = storageClient
+        final ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
@@ -71,7 +71,7 @@ public class StorageClientIntegrationTest {
 
         stubFor(post("/storage/v1/bucket").willReturn(badRequest().withBody(bucketDuplicateNameJson)));
 
-        ResponseWrapper<String> responseWrapper = storageClient
+        final ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
