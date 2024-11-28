@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
+import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 
 import java.util.HashMap;
@@ -564,7 +565,9 @@ public class StorageClient {
      *     "message": "Bucket not found"
      * }
      */
-    public ResponseWrapper<String> uploadFile(final String bucketId, final String fileId, byte[] bytes) {
+    public ResponseWrapper<FileObjectIdentity> uploadFile(
+            final String bucketId, final String fileId, byte[] bytes
+    ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
                 .path(bucketId + "/" + fileId)
@@ -572,11 +575,10 @@ public class StorageClient {
                 .makeWithWrapper();
         try {
             if (rw.body() != null) {
-                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
-                return new ResponseWrapper<>(resMap.get("Id"), null, null);
-                // todo: might wanna replace with record with key and id
+                FileObjectIdentity identity = Mapper.toIdentity(rw.body());
+                return new ResponseWrapper<>(identity, null, null);
             }
-            return rw;
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -586,10 +588,7 @@ public class StorageClient {
 
     /**
      * REST DELETE url/storage/v1/object/test-bucket/some-file
-     * REST response body:
-     * {
-     *   "message": "Successfully deleted"
-     * }
+     * REST response body: {"message": "Successfully deleted"}
      * REST error response body for nonexistent file name:
      * {
      *   "statusCode": "404",
@@ -634,7 +633,9 @@ public class StorageClient {
      *     "message": "Object not found"
      * }
      */
-    public ResponseWrapper<String> updateFile(final String bucketId, final String fileId, byte[] bytes) {
+    public ResponseWrapper<FileObjectIdentity> updateFile(
+            final String bucketId, final String fileId, byte[] bytes
+    ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
                 .path(bucketId + "/" + fileId)
@@ -642,11 +643,10 @@ public class StorageClient {
                 .makeWithWrapper();
         try {
             if (rw.body() != null) {
-                HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
-                return new ResponseWrapper<>(resMap.get("Id"), null, null);
-                // todo: might wanna replace with record with key and id
+                FileObjectIdentity identity = Mapper.toIdentity(rw.body());
+                return new ResponseWrapper<>(identity, null, null);
             }
-            return rw;
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
