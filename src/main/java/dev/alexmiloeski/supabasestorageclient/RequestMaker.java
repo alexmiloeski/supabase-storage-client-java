@@ -13,6 +13,7 @@ class RequestMaker {
     private static final String BUCKET_PATH = "/bucket";
     private static final String OBJECT_PATH = "/object";
 
+    private final HttpClient client;
     private final String apiUrl;
     private final String apiKey;
     private String resource = "";
@@ -22,8 +23,17 @@ class RequestMaker {
     private HttpRequest.BodyPublisher body;
 
     RequestMaker(String apiUrl, String apiKey) {
+        this(apiUrl, apiKey, null);
+    }
+
+    RequestMaker(String apiUrl, String apiKey, HttpClient httpClient) {
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
+        if (httpClient == null) {
+            client = HttpClient.newHttpClient();
+        } else {
+            client = httpClient;
+        }
     }
 
     RequestMaker bucket() {
@@ -109,7 +119,6 @@ class RequestMaker {
         HttpRequest request = builder.build();
 
         try {
-            HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response.body();
         } catch (IOException | InterruptedException e) {
@@ -139,7 +148,6 @@ class RequestMaker {
 
         HttpRequest request = builder.build();
         try {
-            HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 400) {
                 return new ResponseWrapper<>(null, Mapper.toErrorResponse(response.body()), null);
