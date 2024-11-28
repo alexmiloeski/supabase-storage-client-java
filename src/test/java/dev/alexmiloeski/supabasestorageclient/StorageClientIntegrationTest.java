@@ -84,6 +84,42 @@ public class StorageClientIntegrationTest {
         assertEquals(message, errorResponse.message());
     }
 
+    @Test
+    void deleteEmptyBucketReturnsSuccessMessage() {
+        final String expectedMessage = "Successfully deleted";
+
+        stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_NAME)
+                .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        assertEquals(expectedMessage, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void deleteNonEmptyBucketReturnsErrorResponse() {
+        final String deleteNonEmptyBucketResponseJson = """
+                {"statusCode":"%s","error":"%s","message":"%s"}"""
+                .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
+
+        stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_NAME)
+                .willReturn(badRequest().withBody(deleteNonEmptyBucketResponseJson)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+    }
+
     private static class TestStorageClient extends StorageClient {
 
         final int port;
