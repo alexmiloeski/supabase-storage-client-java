@@ -166,7 +166,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_NAME, false, 0, null);
+                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -182,7 +182,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_NAME, false, 0, null);
+                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
