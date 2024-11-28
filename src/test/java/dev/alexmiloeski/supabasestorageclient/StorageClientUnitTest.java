@@ -2,7 +2,9 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import org.junit.jupiter.api.BeforeEach;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class StorageClientUnitTest {
 
@@ -12,6 +14,15 @@ class StorageClientUnitTest {
     @BeforeEach
     void setUp() {
         mockRequestMaker = mock(RequestMaker.class);
+        when(mockRequestMaker.path(any())).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.bucket()).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.object()).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.jsonContent()).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.post()).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.post(any())).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.put(any())).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.delete()).thenReturn(mockRequestMaker);
+        when(mockRequestMaker.contentType(any())).thenReturn(mockRequestMaker);
         storageClient = new TestStorageClient("", "", mockRequestMaker);
     }
 
