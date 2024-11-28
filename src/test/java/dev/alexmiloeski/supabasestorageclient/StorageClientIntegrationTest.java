@@ -2,10 +2,13 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static dev.alexmiloeski.supabasestorageclient.Arrange.*;
@@ -46,6 +49,53 @@ public class StorageClientIntegrationTest {
 
         final boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
+    }
+
+    @Test
+    void listBucketsReturnsBuckets() {
+        stubFor(get("/storage/v1/bucket").willReturn(ok().withBody(LIST_BUCKETS_JSON_RESPONSE)));
+
+        final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
+
+        assertNotNull(responseWrapper);
+        assertEquals(EXPECTED_BUCKETS, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void getBucketReturnsBucket() {
+        stubFor(get("/storage/v1/bucket/" + TEST_BUCKET_NAME)
+                .willReturn(ok().withBody(BUCKET_JSON)));
+
+        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        assertEquals(EXPECTED_BUCKET, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void getBucketWithWrongParamsReturnsErrorResponse() {
+        final String badBucketResponseJson = """
+                {"statusCode":"%s","error":"%s","message":"%s"}"""
+                .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
+
+        stubFor(get("/storage/v1/bucket/" + NONEXISTENT_BUCKET_NAME)
+                .willReturn(badRequest().withBody(badBucketResponseJson)));
+
+        final ResponseWrapper<Bucket> responseWrapper =
+                storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
