@@ -74,4 +74,13 @@ class Mapper {
             throw new RuntimeException(e);
         }
     }
+
+    static String toJson(Object object) {
+        if (object == null) return "";
+        try {
+            return Mapper.mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
