@@ -19,8 +19,10 @@ public class Arrange {
     static final String MOCK_ERROR_STATUS = "499";
     static final String MOCK_ERROR = "some_error";
     static final String MOCK_ERROR_MESSAGE = "Some error message";
-    static final String TEST_BUCKET_NAME = "test-bucket-" + System.currentTimeMillis();
-    static final String TEST_BUCKET_2_NAME = "test-bucket-2-" + System.currentTimeMillis();
+    static final String TEST_BUCKET_ID = "test-bucket-id-" + System.currentTimeMillis();
+    static final String TEST_BUCKET_NAME = "test-bucket-name-" + System.currentTimeMillis();
+    static final String TEST_BUCKET_2_NAME = "test-bucket-2-name-" + System.currentTimeMillis();
+    static final String TEST_BUCKET_2_ID = "test-bucket-2-id-" + System.currentTimeMillis();
     static final String TEST_FILE_NAME = "test-file-" + System.currentTimeMillis();
     static final String TEST_FOLDER_NAME = "test-folder-" + System.currentTimeMillis();
     static final String TEST_FOLDER_ID = "b301b87d-3c57-4f40-988f-20d8691382db";
