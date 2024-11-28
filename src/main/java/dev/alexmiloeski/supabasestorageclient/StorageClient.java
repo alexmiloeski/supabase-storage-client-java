@@ -688,6 +688,6 @@ public class StorageClient {
     }
 
     protected RequestMaker newRequest() {
-        return new RequestMaker(apiUrl, apiKey, null);
+        return new RequestMaker(apiUrl, apiKey);
     }
 }
