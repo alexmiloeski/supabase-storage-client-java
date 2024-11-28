@@ -78,12 +78,8 @@ public class StorageClientIntegrationTest {
 
     @Test
     void getBucketWithWrongParamsReturnsErrorResponse() {
-        final String badBucketResponseJson = """
-                {"statusCode":"%s","error":"%s","message":"%s"}"""
-                .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
-
         stubFor(get("/storage/v1/bucket/" + NONEXISTENT_BUCKET_NAME)
-                .willReturn(badRequest().withBody(badBucketResponseJson)));
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<Bucket> responseWrapper =
                 storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_NAME);
@@ -113,13 +109,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void createBucketWithDuplicateNameReturnsErrorResponse() {
-        String statusCode = "409";
-        String error = "Duplicate";
-        String message = "The resource already exists";
-        final String bucketDuplicateNameJson = """
-                {"statusCode":"%s","error":"%s","message":"%s"}""".formatted(statusCode, error, message);
-
-        stubFor(post("/storage/v1/bucket").willReturn(badRequest().withBody(bucketDuplicateNameJson)));
+        stubFor(post("/storage/v1/bucket").willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
@@ -129,9 +119,9 @@ public class StorageClientIntegrationTest {
         assertNull(responseWrapper.exception());
         ErrorResponse errorResponse = responseWrapper.errorResponse();
         assertNotNull(errorResponse);
-        assertEquals(statusCode, errorResponse.statusCode());
-        assertEquals(error, errorResponse.error());
-        assertEquals(message, errorResponse.message());
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
     }
 
     @Test
@@ -151,12 +141,8 @@ public class StorageClientIntegrationTest {
 
     @Test
     void deleteNonEmptyBucketReturnsErrorResponse() {
-        final String deleteNonEmptyBucketResponseJson = """
-                {"statusCode":"%s","error":"%s","message":"%s"}"""
-                .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
-
         stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_NAME)
-                .willReturn(badRequest().withBody(deleteNonEmptyBucketResponseJson)));
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_NAME);
 
