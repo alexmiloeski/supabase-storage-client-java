@@ -37,6 +37,9 @@ public class Arrange {
             {"name":"%s"}""".formatted(TEST_BUCKET_NAME);
     static final String HEALTHY_JSON = Mapper.toJson(Map.of("healthy",true));
     static final String UNHEALTHY_JSON = Mapper.toJson(Map.of("healthy",false));
+    static final String MOCK_ERROR_JSON_RESPONSE = """
+                {"statusCode":"%s","error":"%s","message":"%s"}"""
+            .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
     static final String TEST_DATE = "2024-11-12T19:14:12.167Z";
     private static final String E_TAG = "88c163864a2335ddbc8d6132a4db382c-1";
     private static final String E_TAG_ACTUAL = "\\\"%s\\\"".formatted(E_TAG);
