@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static dev.alexmiloeski.supabasestorageclient.Arrange.*;
 import static dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse.MISSING_FIELDS_MESSAGE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,20 +46,9 @@ class MapperTest {
 
     @Test
     void mapsToBuckets() {
-        final String testBucketId = "test-bucket-4";
-        final List<Bucket> expectedBucket = List.of(new Bucket(testBucketId, testBucketId, null, true,
-                0, List.of("image/jpeg"), null, null));
-        String json = """
-                [{
-                  "id": "%s",
-                  "name": "%s",
-                  "public": true,
-                  "file_size_limit": 0,
-                  "allowed_mime_types": ["image/jpeg"]
-                }]""".formatted(testBucketId, testBucketId);
-        List<Bucket> bucket = Mapper.toBuckets(json);
+        List<Bucket> bucket = Mapper.toBuckets(LIST_BUCKETS_JSON_RESPONSE);
         assertNotNull(bucket);
-        assertEquals(expectedBucket, bucket);
+        assertEquals(EXPECTED_BUCKETS, bucket);
     }
 
     @Test
@@ -77,54 +67,9 @@ class MapperTest {
 
     @Test
     void mapsToObjects() {
-        final String testFolderName = "some-folder";
-        final String testFolderId = "b301b87d-3c57-4f40-988f-20d8691382da";
-        final String testFileName = "some-file";
-        final String testFileId = "b301b87d-3c57-4f40-988f-20d8691382df";
-        final String someDate = "2024-11-12T19:14:12.167Z";
-        final String eTag = "88c163864a2335ddbc8d6132a4db382c-1";
-        final String eTagActual = "\\\"%s\\\"".formatted(eTag);
-        final String eTagExpected = "\"%s\"".formatted(eTag);
-        final int size = 41076;
-        final String mimeType = "image/jpeg";
-        final String cacheControl = "max-age=3600";
-        final int statusCode = 200;
-        final List<FileObject> expectedObjects = List.of(
-                new FileObject(testFolderId, testFolderName, someDate, someDate, someDate, null),
-                new FileObject(testFileId, testFileName, someDate, someDate, someDate,
-                        new FileObject.Metadata(eTagExpected, size, mimeType, cacheControl, someDate, size, statusCode))
-        );
-        String json = """
-                [
-                    {
-                        "name": "%s",
-                        "id": "%s",
-                        "updated_at": "%s",
-                        "created_at": "%s",
-                        "last_accessed_at": "%s",
-                        "metadata": null
-                    },
-                    {
-                        "name": "%s",
-                        "id": "%s",
-                        "updated_at": "%s",
-                        "created_at": "%s",
-                        "last_accessed_at": "%s",
-                        "metadata": {
-                            "eTag": "%s",
-                            "size": %d,
-                            "mimetype": "%s",
-                            "cacheControl": "%s",
-                            "lastModified": "%s",
-                            "contentLength": %d,
-                            "httpStatusCode": %d
-                        }
-                    }
-                ]""".formatted(testFolderName, testFolderId, someDate, someDate, someDate, testFileName, testFileId,
-                someDate, someDate, someDate, eTagActual, size, mimeType, cacheControl, someDate, size, statusCode);
-        List<FileObject> objects = Mapper.toObjects(json);
+        List<FileObject> objects = Mapper.toObjects(LIST_FILES_JSON_RESPONSE);
         assertNotNull(objects);
-        assertEquals(expectedObjects, objects);
+        assertEquals(EXPECTED_LIST_FILES_OBJECTS, objects);
     }
 
     @Test
