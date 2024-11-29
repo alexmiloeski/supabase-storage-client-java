@@ -50,7 +50,7 @@ public class Arrange {
     private static final String CACHE_CONTROL = "max-age=3600";
     private static final int STATUS_CODE = 200;
     static final List<FileObject> EXPECTED_LIST_FILES_OBJECTS = List.of(
-            new FileObject(TEST_FOLDER_ID, TEST_FOLDER_NAME, TEST_DATE, TEST_DATE, TEST_DATE, null),
+            new FileObject(null, TEST_FOLDER_NAME, TEST_DATE, TEST_DATE, TEST_DATE, null),
             new FileObject(TEST_FILE_ID, TEST_FILE_NAME, TEST_DATE, TEST_DATE, TEST_DATE,
                     new FileObject.Metadata(E_TAG_EXPECTED, CONTENT_LENGTH, MIME_TYPE,
                             CACHE_CONTROL, TEST_DATE, CONTENT_LENGTH, STATUS_CODE))
@@ -59,7 +59,7 @@ public class Arrange {
                 [
                     {
                         "name": "%s",
-                        "id": "%s",
+                        "id": null,
                         "updated_at": "%s",
                         "created_at": "%s",
                         "last_accessed_at": "%s",
@@ -81,7 +81,7 @@ public class Arrange {
                             "httpStatusCode": %d
                         }
                     }
-                ]""".formatted(TEST_FOLDER_NAME, TEST_FOLDER_ID, TEST_DATE, TEST_DATE, TEST_DATE,
+                ]""".formatted(TEST_FOLDER_NAME, TEST_DATE, TEST_DATE, TEST_DATE,
             TEST_FILE_NAME, TEST_FILE_ID, TEST_DATE, TEST_DATE, TEST_DATE, E_TAG_ACTUAL, CONTENT_LENGTH,
             MIME_TYPE, CACHE_CONTROL, TEST_DATE, CONTENT_LENGTH, STATUS_CODE);
     static final List<Bucket> EXPECTED_BUCKETS = List.of(
