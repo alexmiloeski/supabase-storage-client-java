@@ -489,7 +489,7 @@ public class StorageClient {
         }
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path("/list/" + bucketId)
+                .path("list/" + bucketId)
                 .post("""
                         {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
                         .formatted(limit, offset, folderId))
