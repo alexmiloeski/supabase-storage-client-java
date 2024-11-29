@@ -534,15 +534,15 @@ public class StorageClient {
      *     "message": "Bucket not found"
      * }
      */
-    public ResponseWrapper<String> downloadFile(final String bucketId, final String fileId) {
+    public ResponseWrapper<String> downloadFile(final String bucketId, final String fileName) {
         return newRequest()
                 .object()
-                .path(bucketId + "/" + fileId)
+                .path(bucketId + "/" + fileName)
                 .makeWithWrapper();
     }
 
-    public ResponseWrapper<byte[]> downloadFileBytes(final String bucketId, final String fileId) {
-        ResponseWrapper<String> rw = downloadFile(bucketId, fileId);
+    public ResponseWrapper<byte[]> downloadFileBytes(final String bucketId, final String fileName) {
+        ResponseWrapper<String> rw = downloadFile(bucketId, fileName);
         if (rw.hasBody()) {
             return new ResponseWrapper<>(rw.body().getBytes(), null, null);
         }
@@ -567,11 +567,11 @@ public class StorageClient {
      * }
      */
     public ResponseWrapper<FileObjectIdentity> uploadFile(
-            final String bucketId, final String fileId, byte[] bytes
+            final String bucketId, final String fileName, byte[] bytes
     ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path(bucketId + "/" + fileId)
+                .path(bucketId + "/" + fileName)
                 .post(bytes)
                 .makeWithWrapper();
         try {
@@ -597,10 +597,10 @@ public class StorageClient {
      *   "message": "Object not found"
      * }
      */
-    public ResponseWrapper<String> deleteFile(final String bucketId, final String fileId) {
+    public ResponseWrapper<String> deleteFile(final String bucketId, final String fileName) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path(bucketId + "/" + fileId)
+                .path(bucketId + "/" + fileName)
                 .delete()
                 .makeWithWrapper();
         try {
@@ -635,11 +635,11 @@ public class StorageClient {
      * }
      */
     public ResponseWrapper<FileObjectIdentity> updateFile(
-            final String bucketId, final String fileId, byte[] bytes
+            final String bucketId, final String fileName, byte[] bytes
     ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path(bucketId + "/" + fileId)
+                .path(bucketId + "/" + fileName)
                 .put(bytes)
                 .makeWithWrapper();
         try {
