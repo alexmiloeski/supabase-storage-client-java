@@ -46,8 +46,8 @@ public class StorageClient {
      * REST response body example:
      * [
      *     {
-     *         "id": "test-bucket-1",
-     *         "name": "test-bucket-1",
+     *         "id": "test-bucket-1-id",
+     *         "name": "test-bucket-1-name",
      *         "owner": "",
      *         "public": false,
      *         "file_size_limit": null,
@@ -56,8 +56,8 @@ public class StorageClient {
      *         "updated_at": "2024-11-12T19:13:16.984Z"
      *     },
      *     {
-     *         "id": "test-bucket-2",
-     *         "name": "test-bucket-2",
+     *         "id": "test-bucket-2-id",
+     *         "name": "test-bucket-2-name",
      *         "owner": "",
      *         "public": true,
      *         "file_size_limit": 0,
@@ -82,8 +82,8 @@ public class StorageClient {
      * REST response body example:
      * [
      *     {
-     *         "id": "test-bucket-1",
-     *         "name": "test-bucket-1",
+     *         "id": "test-bucket-1-id",
+     *         "name": "test-bucket-1-name",
      *         "owner": "",
      *         "public": false,
      *         "file_size_limit": null,
@@ -92,8 +92,8 @@ public class StorageClient {
      *         "updated_at": "2024-11-12T19:13:16.984Z"
      *     },
      *     {
-     *         "id": "test-bucket-2",
-     *         "name": "test-bucket-2",
+     *         "id": "test-bucket-2-id",
+     *         "name": "test-bucket-2-name",
      *         "owner": "",
      *         "public": true,
      *         "file_size_limit": 0,
@@ -126,8 +126,8 @@ public class StorageClient {
      * REST GET url/storage/v1/bucket/some-bucket
      * REST response body example:
      * {
-     *     "id": "test-bucket",
-     *     "name": "test-bucket",
+     *     "id": "test-bucket-id",
+     *     "name": "test-bucket-name",
      *     "owner": "",
      *     "public": false,
      *     "file_size_limit": null,
@@ -149,8 +149,8 @@ public class StorageClient {
      * REST GET url/storage/v1/bucket/some-bucket
      * REST response body example:
      * {
-     *     "id": "test-bucket",
-     *     "name": "test-bucket",
+     *     "id": "test-bucket-id",
+     *     "name": "test-bucket-name",
      *     "owner": "",
      *     "public": false,
      *     "file_size_limit": null,
@@ -181,15 +181,15 @@ public class StorageClient {
      * REST POST url/storage/v1/bucket
      * REST request body example:
      * {
-     *   "id": "test-bucket",
-     *   "name": "test-bucket",
+     *   "id": "test-bucket-id",
+     *   "name": "test-bucket-name",
      *   "public": true,
      *   "file_size_limit": 0,
      *   "allowed_mime_types": ["image/jpeg"]
      * }
      * REST response body example:
      * {
-     *     "name": "test-bucket"
+     *     "name": "test-bucket-name"
      * }
      */
     public String createBucket(String id, String name, boolean isPublic,
@@ -220,15 +220,15 @@ public class StorageClient {
      * REST POST url/storage/v1/bucket
      * REST request body example:
      * {
-     *   "id": "test-bucket",
-     *   "name": "test-bucket",
+     *   "id": "test-bucket-id",
+     *   "name": "test-bucket-name",
      *   "public": true,
      *   "file_size_limit": 0,
      *   "allowed_mime_types": ["image/jpeg"]
      * }
      * REST response body example:
      * {
-     *     "name": "test-bucket"
+     *     "name": "test-bucket-name"
      * }
      */
     public ResponseWrapper<String> createBucketWithWrapper(String id, String name, boolean isPublic,
@@ -343,11 +343,11 @@ public class StorageClient {
     }
 
     /**
-     * REST PUT url/storage/v1/bucket/test-bucket
+     * REST PUT url/storage/v1/bucket/test-bucket-id
      * REST request body example:
      *  {
-     *   "id": "test-bucket",
-     *   "name": "test-bucket",
+     *   "id": "test-bucket-id",
+     *   "name": "test-bucket-name",
      *   "public": false,
      *   "file_size_limit": 0,
      *   "allowed_mime_types": ["image/jpeg"]
@@ -384,11 +384,11 @@ public class StorageClient {
     }
 
     /**
-     * REST PUT url/storage/v1/bucket/test-bucket
+     * REST PUT url/storage/v1/bucket/test-bucket-id
      * REST request body example:
      *  {
-     *   "id": "test-bucket",
-     *   "name": "test-bucket",
+     *   "id": "test-bucket-id",
+     *   "name": "test-bucket-name",
      *   "public": false,
      *   "file_size_limit": 0,
      *   "allowed_mime_types": ["image/jpeg"]
@@ -432,7 +432,7 @@ public class StorageClient {
      * specifying custom values for any of the following: folder prefix, offset, and limit.
      * If you want to leave any of them to the default value, just pass null for that field.
      * <pre>
-     * REST POST url/storage/v1/object/list/test-bucket
+     * REST POST url/storage/v1/object/list/test-bucket-id
      * REST request body example: {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":""}
      * REST response body example:
      * [
@@ -520,7 +520,7 @@ public class StorageClient {
     }
 
     /**
-     * REST GET url/storage/v1/object/test-bucket/some-file
+     * REST GET url/storage/v1/object/test-bucket-id/some-file-name
      * REST error response body for wrong file name:
      * {
      *     "statusCode": "404",
@@ -550,9 +550,9 @@ public class StorageClient {
     }
 
     /**
-     * REST POST url/storage/v1/object/test-bucket/some-file
+     * REST POST url/storage/v1/object/test-bucket-id/some-file-name
      * REST response body example:
-     * {"Key":"test-bucket/some-file","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
+     * {"Key":"test-bucket-id/some-file-name","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
      * REST error response body for duplicate file name:
      * {
      *     "statusCode": "409",
@@ -588,7 +588,7 @@ public class StorageClient {
     }
 
     /**
-     * REST DELETE url/storage/v1/object/test-bucket/some-file
+     * REST DELETE url/storage/v1/object/test-bucket-id/some-file-name
      * REST response body: {"message": "Successfully deleted"}
      * REST error response body for nonexistent file name:
      * {
@@ -618,9 +618,9 @@ public class StorageClient {
     }
 
     /**
-     * REST PUT url/storage/v1/object/test-bucket/some-file
+     * REST PUT url/storage/v1/object/test-bucket-id/some-file-name
      * REST response body example:
-     * {"Key":"test-bucket/some-file","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
+     * {"Key":"test-bucket-id/some-file-name","Id":"f1c8e70a-95f8-47df-9122-d3f152f95f70"}
      * REST error response body example for wrong bucket id:
      * {
      *     "statusCode": "404",
