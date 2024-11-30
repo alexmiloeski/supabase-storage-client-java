@@ -5,6 +5,22 @@ import com.github.tomakehurst.wiremock.matching.MatchResult;
 
 import java.util.function.Predicate;
 
+/**
+ * <p>A Matcher class that matches Wiremock requests by their body's size in <b>bytes</b>.</p>
+ * <p>You can use either one of the 3 provided comparisons (equals, greater than, less than),
+ * or a predicate for custom logic.</p>
+ * <p>Examples:</p>
+ * <pre>
+ * stubFor(post("/some/path")
+ *     .withRequestBody(withSizeGreaterThan(10))
+ *     .willReturn(badRequest().withBody("body size too large")));
+ * </pre>
+ * <pre>
+ * stubFor(post("/some/path")
+ *     .withRequestBody(withSizeMatching(size -> size == 0 || size > 10))
+ *     .willReturn(badRequest().withBody("body must be between 1 and 10 bytes"))));
+ * </pre>
+ */
 public class BodyLengthMatcher extends ContentPattern<byte[]> {
     public enum OP { EQUAL, ABOVE, BELOW }
 
@@ -57,6 +73,15 @@ public class BodyLengthMatcher extends ContentPattern<byte[]> {
         };
     }
 
+    /**
+     * Matches requests whose body's size fits the predicate. Example:
+     * <pre>
+     * stubFor(post("/some/path")
+     *     .withRequestBody(withSizeMatching(size -> size == 0 || size > 10))
+     *     .willReturn(badRequest().withBody("body must be between 1 and 10 bytes"))));
+     * </pre>
+     * @param predicate A lambda with an Integer input that represents the body's size
+     */
     public static BodyLengthMatcher withSizeMatching(Predicate<Integer> predicate) {
         return new BodyLengthMatcher(predicate);
     }
