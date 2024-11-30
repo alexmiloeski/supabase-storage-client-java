@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StorageClientIntegrationTest {
 
     final static String TEST_API_KEY = "testApiKey";
+    final static String STORAGE_PATH = "/storage/v1";
+    final static String BUCKET_PATH = STORAGE_PATH + "/bucket";
+    final static String OBJECT_PATH = STORAGE_PATH + "/object";
 
     StorageClient storageClient;
 
@@ -36,7 +39,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void healthCheckReturnsTrue() {
-        stubFor(get("/storage/v1/health").willReturn(ok().withBody(HEALTHY_JSON)));
+        stubFor(get(STORAGE_PATH + "/health").willReturn(ok().withBody(HEALTHY_JSON)));
 
         final boolean isHealthy = storageClient.isHealthy();
         assertTrue(isHealthy);
@@ -44,7 +47,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void healthCheckReturnsFalseWhenServerSaysFalse() {
-        stubFor(get("/storage/v1/health").willReturn(ok().withBody(UNHEALTHY_JSON)));
+        stubFor(get(STORAGE_PATH + "/health").willReturn(ok().withBody(UNHEALTHY_JSON)));
 
         final boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
@@ -52,7 +55,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void healthCheckReturnsFalseWhenServerErrors() {
-        stubFor(get("/storage/v1/health").willReturn(serverError()));
+        stubFor(get(STORAGE_PATH + "/health").willReturn(serverError()));
 
         final boolean isHealthy = storageClient.isHealthy();
         assertFalse(isHealthy);
@@ -60,7 +63,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void listBucketsReturnsBuckets() {
-        stubFor(get("/storage/v1/bucket").willReturn(ok().withBody(LIST_BUCKETS_JSON_RESPONSE)));
+        stubFor(get(BUCKET_PATH).willReturn(ok().withBody(LIST_BUCKETS_JSON_RESPONSE)));
 
         final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
 
@@ -72,7 +75,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void getBucketReturnsBucket() {
-        stubFor(get("/storage/v1/bucket/" + TEST_BUCKET_ID)
+        stubFor(get(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(BUCKET_JSON)));
 
         final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
@@ -85,7 +88,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void getBucketWithWrongParamsReturnsErrorResponse() {
-        stubFor(get("/storage/v1/bucket/" + NONEXISTENT_BUCKET_ID)
+        stubFor(get(BUCKET_PATH + "/" + NONEXISTENT_BUCKET_ID)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<Bucket> responseWrapper =
@@ -103,7 +106,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void createBucketWithValidNameReturnsBodyWithName() {
-        stubFor(post("/storage/v1/bucket").willReturn(ok().withBody(BUCKET_CREATED_JSON_RESPONSE)));
+        stubFor(post(BUCKET_PATH).willReturn(ok().withBody(BUCKET_CREATED_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
@@ -116,7 +119,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void createBucketWithDuplicateNameReturnsErrorResponse() {
-        stubFor(post("/storage/v1/bucket").willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+        stubFor(post(BUCKET_PATH).willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
@@ -134,7 +137,7 @@ public class StorageClientIntegrationTest {
     @Test
     void deleteEmptyBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully deleted";
-        stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_ID)
+        stubFor(delete(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
         final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
@@ -147,7 +150,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void deleteNonEmptyBucketReturnsErrorResponse() {
-        stubFor(delete("/storage/v1/bucket/" + TEST_BUCKET_ID)
+        stubFor(delete(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
@@ -165,7 +168,7 @@ public class StorageClientIntegrationTest {
     @Test
     void emptyBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully emptied";
-        stubFor(post("/storage/v1/bucket/" + TEST_BUCKET_ID + "/empty")
+        stubFor(post(BUCKET_PATH + "/" + TEST_BUCKET_ID + "/empty")
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
         final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
@@ -178,7 +181,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void emptyBucketWithWrongParamsReturnsErrorResponse() {
-        stubFor(post("/storage/v1/bucket/" + TEST_BUCKET_ID + "/empty")
+        stubFor(post(BUCKET_PATH + "/" + TEST_BUCKET_ID + "/empty")
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
@@ -196,7 +199,7 @@ public class StorageClientIntegrationTest {
     @Test
     void updateBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully updated";
-        stubFor(put("/storage/v1/bucket/" + TEST_BUCKET_ID)
+        stubFor(put(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
         final ResponseWrapper<String> responseWrapper = storageClient
@@ -210,7 +213,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void updateBucketWithWrongParamsReturnsErrorResponse() {
-        stubFor(put("/storage/v1/bucket/" + TEST_BUCKET_ID)
+        stubFor(put(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
@@ -228,7 +231,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void listFilesInBucketReturnsObjects() {
-        stubFor(post("/storage/v1/object/list/" + TEST_BUCKET_ID)
+        stubFor(post(OBJECT_PATH + "/list/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(LIST_FILES_JSON_RESPONSE)));
 
         final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_ID);
@@ -241,7 +244,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void listFilesInBucketWithFolderReturnsObjects() {
-        stubFor(post("/storage/v1/object/list/" + TEST_BUCKET_ID)
+        stubFor(post(OBJECT_PATH + "/list/" + TEST_BUCKET_ID)
                 .withRequestBody(equalToJson("""
                 {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
                         .formatted(TEST_FOLDER_NAME)))
@@ -258,7 +261,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void listFilesWithWrongParamsReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/list/" + NONEXISTENT_BUCKET_ID)
+        stubFor(post(OBJECT_PATH + "/list/" + NONEXISTENT_BUCKET_ID)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<List<FileObject>> responseWrapper =
@@ -276,7 +279,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void downloadFileReturnsFileContents() {
-        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(get(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
 
         final ResponseWrapper<String> responseWrapper =
@@ -290,7 +293,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void downloadFileBytesReturnsFileContentsInBytes() {
-        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(get(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
 
         final ResponseWrapper<byte[]> responseWrapper =
@@ -304,7 +307,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void downloadFileWithWrongBucketIdReturnsErrorResponse() {
-        stubFor(get(urlPathMatching("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/.*"))
+        stubFor(get(urlPathMatching(OBJECT_PATH + "/" + NONEXISTENT_BUCKET_ID + "/.*"))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper =
@@ -322,7 +325,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void downloadFileWithWrongFileNameReturnsErrorResponse() {
-        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+        stubFor(get(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper =
@@ -341,7 +344,7 @@ public class StorageClientIntegrationTest {
     @Test
     void deleteFileReturnsSuccessMessage() {
         final String expectedMessage = "Successfully deleted";
-        stubFor(delete("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(delete(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
         final ResponseWrapper<String> responseWrapper =
@@ -356,7 +359,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void deleteFileWithWrongBucketIdReturnsErrorResponse() {
-        stubFor(delete("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(delete(OBJECT_PATH + "/" + NONEXISTENT_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper =
@@ -374,7 +377,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void deleteFileWithWrongFileNameReturnsErrorResponse() {
-        stubFor(delete("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+        stubFor(delete(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper =
@@ -392,7 +395,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void updateFileReturnsIdentity() {
-        stubFor(put("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(put(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
@@ -407,7 +410,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void updateFileWithWrongBucketNameReturnsErrorResponse() {
-        stubFor(put(urlPathMatching("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/.*"))
+        stubFor(put(urlPathMatching(OBJECT_PATH + "/" + NONEXISTENT_BUCKET_ID + "/.*"))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
@@ -425,7 +428,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void updateFileWithWrongFileNameReturnsErrorResponse() {
-        stubFor(put("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+        stubFor(put(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
@@ -443,10 +446,10 @@ public class StorageClientIntegrationTest {
 
     @Test
     void uploadFileWithRightSizeReturnsIdentity() {
-        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeGreaterThan(1))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
-        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeLessThan(2))
                 .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
 
@@ -462,10 +465,10 @@ public class StorageClientIntegrationTest {
 
     @Test
     void uploadOversizedFileReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeGreaterThan(1))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
-        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeLessThan(2))
                 .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
 
@@ -486,7 +489,7 @@ public class StorageClientIntegrationTest {
     @Test
     @Disabled
     void uploadFileWithWrongMimeTypeReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withHeader("Content-Type", equalTo("image/jpeg"))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
@@ -507,7 +510,7 @@ public class StorageClientIntegrationTest {
     @Test
     void moveFileReturnsSuccessMessage() {
         final String expectedMessage = "Successfully moved";
-        stubFor(post("/storage/v1/object/move")
+        stubFor(post(OBJECT_PATH + "/move")
                 .withRequestBody(equalToJson("""
                          {
                              "bucketId": "%s",
@@ -530,7 +533,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void moveFileWithWrongSourceBucketReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/move")
+        stubFor(post(OBJECT_PATH + "/move")
                 .withRequestBody(equalToJson("""
                          {
                              "bucketId": "%s",
@@ -556,7 +559,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void moveFileWithWrongSourceFileReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/move")
+        stubFor(post(OBJECT_PATH + "/move")
                 .withRequestBody(equalToJson("""
                          {
                              "bucketId": "%s",
@@ -582,7 +585,7 @@ public class StorageClientIntegrationTest {
 
     @Test
     void moveFileWithWrongDestinationBucketReturnsErrorResponse() {
-        stubFor(post("/storage/v1/object/move")
+        stubFor(post(OBJECT_PATH + "/move")
                 .withRequestBody(equalToJson("""
                          {
                              "bucketId": "%s",
