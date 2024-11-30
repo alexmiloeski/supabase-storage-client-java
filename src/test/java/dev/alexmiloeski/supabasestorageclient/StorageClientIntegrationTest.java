@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
@@ -502,6 +503,109 @@ public class StorageClientIntegrationTest {
         assertNull(responseWrapper.body());
         assertNull(responseWrapper.exception());
     }
+
+    @Test
+    void moveFileReturnsSuccessMessage() {
+        final String expectedMessage = "Successfully moved";
+        stubFor(post("/storage/v1/object/move")
+                .withRequestBody(equalToJson("""
+                         {
+                             "bucketId": "%s",
+                             "sourceKey": "%s",
+                             "destinationBucket": "%s",
+                             "destinationKey": "%s"
+                         }"""
+                    .formatted(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH)))
+                .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                TEST_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertEquals(expectedMessage, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void moveFileWithWrongSourceBucketReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/move")
+                .withRequestBody(equalToJson("""
+                         {
+                             "bucketId": "%s",
+                             "sourceKey": "%s",
+                             "destinationBucket": "%s",
+                             "destinationKey": "%s"
+                         }"""
+                        .formatted(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH)))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void moveFileWithWrongSourceFileReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/move")
+                .withRequestBody(equalToJson("""
+                         {
+                             "bucketId": "%s",
+                             "sourceKey": "%s",
+                             "destinationBucket": "%s",
+                             "destinationKey": "%s"
+                         }"""
+                        .formatted(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH)))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void moveFileWithWrongDestinationBucketReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/move")
+                .withRequestBody(equalToJson("""
+                         {
+                             "bucketId": "%s",
+                             "sourceKey": "%s",
+                             "destinationBucket": "%s",
+                             "destinationKey": "%s"
+                         }"""
+                        .formatted(TEST_BUCKET_ID, TEST_FILE_NAME, NONEXISTENT_BUCKET_ID, MOVED_TEST_FILE_PATH)))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                TEST_BUCKET_ID, TEST_FILE_NAME, NONEXISTENT_BUCKET_ID, MOVED_TEST_FILE_PATH));
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
 
     private static class TestStorageClient extends StorageClient {
 
