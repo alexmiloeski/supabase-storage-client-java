@@ -3,6 +3,8 @@ package dev.alexmiloeski.supabasestorageclient;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
+import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,6 +210,54 @@ public class StorageClientIntegrationTest {
 
         final ResponseWrapper<String> responseWrapper = storageClient
                 .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void listFilesInBucketReturnsObjects() {
+        stubFor(post("/storage/v1/object/list/" + TEST_BUCKET_ID)
+                .willReturn(ok().withBody(LIST_FILES_JSON_RESPONSE)));
+
+        final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_ID);
+
+        assertNotNull(responseWrapper);
+        assertEquals(EXPECTED_LIST_FILES_OBJECTS, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void listFilesInBucketWithFolderReturnsObjects() {
+        stubFor(post("/storage/v1/object/list/" + TEST_BUCKET_ID)
+                .withRequestBody(equalToJson("""
+                {"limit":100,"offset":0,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
+                        .formatted(TEST_FOLDER_NAME)))
+                .willReturn(ok().withBody(LIST_FILES_JSON_RESPONSE)));
+
+        final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(
+                TEST_BUCKET_ID, new ListFilesOptions(TEST_FOLDER_NAME, null, null));
+
+        assertNotNull(responseWrapper);
+        assertEquals(EXPECTED_LIST_FILES_OBJECTS, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void listFilesWithWrongParamsReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/list/" + NONEXISTENT_BUCKET_ID)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<List<FileObject>> responseWrapper =
+                storageClient.listFilesInBucket(NONEXISTENT_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
