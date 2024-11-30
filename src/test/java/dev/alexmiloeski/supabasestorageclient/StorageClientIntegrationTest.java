@@ -6,6 +6,7 @@ import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -374,6 +375,57 @@ public class StorageClientIntegrationTest {
 
         final ResponseWrapper<String> responseWrapper =
                 storageClient.deleteFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void updateFileReturnsIdentity() {
+        stubFor(put("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+
+        final ResponseWrapper<FileObjectIdentity> responseWrapper =
+                storageClient.updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
+
+        assertNotNull(responseWrapper);
+        final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
+        assertEquals(EXPECTED_OBJECT_IDENTITY, fileObjectIdentity);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void updateFileWithWrongBucketNameReturnsErrorResponse() {
+        stubFor(put(urlPathMatching("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/.*"))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .updateFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void updateFileWithWrongFileNameReturnsErrorResponse() {
+        stubFor(put("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .updateFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
