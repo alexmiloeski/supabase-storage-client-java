@@ -27,6 +27,7 @@ public class Arrange {
     static final String TEST_FOLDER_NAME = "test-folder-" + System.currentTimeMillis();
     static final String TEST_FILE_ID = "f1c8e70a-95f8-47df-9122-d3f152f95f70";
     static final String MOVED_TEST_FILE_PATH = TEST_FOLDER_NAME + "/" + TEST_FILE_NAME;
+    static final String NONEXISTENT_FILE_NAME = "nonexistent-file-name";
     static final String NONEXISTENT_FILE_ID = "d0b2f30d-46f5-45a0-1231-f2d063c84d40";
     static final String NONEXISTENT_BUCKET_ID = "nonexistent-bucket";
     static final String TEST_FILE_CONTENTS = "Test file contents.";
