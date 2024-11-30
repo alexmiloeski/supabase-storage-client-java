@@ -9,12 +9,15 @@ import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static dev.alexmiloeski.supabasestorageclient.Arrange.*;
+import static dev.alexmiloeski.supabasestorageclient.matchers.BodyLengthMatcher.withSizeGreaterThan;
+import static dev.alexmiloeski.supabasestorageclient.matchers.BodyLengthMatcher.withSizeLessThan;
 import static org.junit.jupiter.api.Assertions.*;
 
 @WireMockTest
@@ -426,6 +429,69 @@ public class StorageClientIntegrationTest {
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, new byte[0]);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void uploadFileWithRightSizeReturnsIdentity() {
+        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withRequestBody(withSizeGreaterThan(1))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withRequestBody(withSizeLessThan(2))
+                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+
+        final ResponseWrapper<FileObjectIdentity> responseWrapper =
+                storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[1]);
+
+        assertNotNull(responseWrapper);
+        final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
+        assertEquals(EXPECTED_OBJECT_IDENTITY, fileObjectIdentity);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void uploadOversizedFileReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withRequestBody(withSizeGreaterThan(1))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withRequestBody(withSizeLessThan(2))
+                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+
+        final ResponseWrapper<FileObjectIdentity> responseWrapper =
+                storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[3]);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    // todo: upload file with wrong mime type
+    @Test
+    @Disabled
+    void uploadFileWithWrongMimeTypeReturnsErrorResponse() {
+        stubFor(post("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withHeader("Content-Type", equalTo("image/jpeg"))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<FileObjectIdentity> responseWrapper =
+                storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
+        // todo: what about the Content-Type header in the request?
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
