@@ -269,6 +269,70 @@ public class StorageClientIntegrationTest {
         assertNull(responseWrapper.exception());
     }
 
+    @Test
+    void downloadFileReturnsFileContents() {
+        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.downloadFile(TEST_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void downloadFileBytesReturnsFileContentsInBytes() {
+        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
+
+        final ResponseWrapper<byte[]> responseWrapper =
+                storageClient.downloadFileBytes(TEST_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        assertArrayEquals(TEST_FILE_CONTENTS.getBytes(), responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void downloadFileWithWrongBucketIdReturnsErrorResponse() {
+        stubFor(get(urlPathMatching("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/.*"))
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.downloadFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void downloadFileWithWrongFileNameReturnsErrorResponse() {
+        stubFor(get("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.downloadFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
     private static class TestStorageClient extends StorageClient {
 
         final int port;
