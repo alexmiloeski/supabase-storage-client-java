@@ -65,7 +65,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.makeWithWrapper())
                 .thenReturn(new ResponseWrapper<>(BUCKET_JSON, null, null));
 
-        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_NAME);
+        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_BUCKET, responseWrapper.body());
@@ -81,7 +81,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<Bucket> responseWrapper =
-                storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_NAME);
+                storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -99,7 +99,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(BUCKET_CREATED_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.createBucketWithWrapper(
-                TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
+                TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
         assertNotNull(responseWrapper);
         assertEquals(TEST_BUCKET_NAME, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
@@ -114,7 +114,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.createBucketWithWrapper(
-                TEST_BUCKET_NAME, TEST_BUCKET_NAME, false, null, null);
+                TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -132,7 +132,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.makeWithWrapper()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_NAME);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -147,7 +147,7 @@ class StorageClientUnitTest {
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_NAME);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -166,7 +166,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
+                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -182,7 +182,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_NAME, null, false, 0, null);
+                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -200,7 +200,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.makeWithWrapper()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_NAME);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -215,7 +215,7 @@ class StorageClientUnitTest {
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_NAME);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -232,7 +232,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.makeWithWrapper()).thenReturn(
                 new ResponseWrapper<>(LIST_FILES_JSON_RESPONSE, null, null));
 
-        final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_NAME);
+        final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_LIST_FILES_OBJECTS, responseWrapper.body());
@@ -246,7 +246,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(LIST_FILES_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(
-                TEST_BUCKET_NAME, new ListFilesOptions(TEST_FOLDER_NAME, null, null));
+                TEST_BUCKET_ID, new ListFilesOptions(TEST_FOLDER_NAME, null, null));
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_LIST_FILES_OBJECTS, responseWrapper.body());
@@ -262,7 +262,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<List<FileObject>> responseWrapper =
-                storageClient.listFilesInBucket(NONEXISTENT_BUCKET_NAME);
+                storageClient.listFilesInBucket(NONEXISTENT_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -280,7 +280,7 @@ class StorageClientUnitTest {
                 .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
 
         final ResponseWrapper<String> responseWrapper =
-                storageClient.downloadFile(TEST_BUCKET_NAME, TEST_FILE_NAME);
+                storageClient.downloadFile(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
@@ -294,7 +294,7 @@ class StorageClientUnitTest {
                 .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
 
         final ResponseWrapper<byte[]> responseWrapper =
-                storageClient.downloadFileBytes(TEST_BUCKET_NAME, TEST_FILE_NAME);
+                storageClient.downloadFileBytes(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         assertArrayEquals(TEST_FILE_CONTENTS.getBytes(), responseWrapper.body());
@@ -310,7 +310,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper =
-                storageClient.downloadFile(NONEXISTENT_BUCKET_NAME, TEST_FILE_NAME);
+                storageClient.downloadFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -328,7 +328,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
-                storageClient.updateFile(TEST_BUCKET_NAME, TEST_FILE_ID, "".getBytes());
+                storageClient.updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
         final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
@@ -345,7 +345,7 @@ class StorageClientUnitTest {
                         null));
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(NONEXISTENT_BUCKET_NAME, NONEXISTENT_FILE_NAME, "".getBytes());
+                .updateFile(NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -363,7 +363,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(TEST_BUCKET_NAME, TEST_FILE_NAME, "".getBytes());
+                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
         final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
@@ -380,7 +380,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(TEST_BUCKET_NAME, TEST_FILE_NAME, "".getBytes());
+                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -399,7 +399,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper =
-                storageClient.deleteFile(TEST_BUCKET_NAME, TEST_FILE_NAME);
+                storageClient.deleteFile(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -416,7 +416,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper =
-                storageClient.deleteFile(TEST_BUCKET_NAME, NONEXISTENT_FILE_NAME);
+                storageClient.deleteFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -435,7 +435,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
-                TEST_BUCKET_NAME, TEST_FILE_NAME, TEST_BUCKET_NAME, MOVED_TEST_FILE_PATH));
+                TEST_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -452,7 +452,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
-                NONEXISTENT_BUCKET_NAME, NONEXISTENT_FILE_NAME, TEST_BUCKET_NAME, MOVED_TEST_FILE_PATH));
+                NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
