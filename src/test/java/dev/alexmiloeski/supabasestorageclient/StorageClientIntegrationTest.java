@@ -333,6 +333,58 @@ public class StorageClientIntegrationTest {
         assertNull(responseWrapper.exception());
     }
 
+    @Test
+    void deleteFileReturnsSuccessMessage() {
+        final String expectedMessage = "Successfully deleted";
+        stubFor(delete("/storage/v1/object/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.deleteFile(TEST_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertEquals(expectedMessage, responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void deleteFileWithWrongBucketIdReturnsErrorResponse() {
+        stubFor(delete("/storage/v1/object/" + NONEXISTENT_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.deleteFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    void deleteFileWithWrongFileNameReturnsErrorResponse() {
+        stubFor(delete("/storage/v1/object/" + TEST_BUCKET_ID + "/" + NONEXISTENT_FILE_NAME)
+                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+
+        final ResponseWrapper<String> responseWrapper =
+                storageClient.deleteFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
+        assertEquals(MOCK_ERROR, errorResponse.error());
+        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
     private static class TestStorageClient extends StorageClient {
 
         final int port;
