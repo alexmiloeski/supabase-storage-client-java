@@ -4,6 +4,7 @@ import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
@@ -197,7 +198,7 @@ class StorageClientTest {
     void updateBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(testBucketId, false, 0, null);
+                .updateBucketWithWrapper(testBucketId, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -244,13 +245,13 @@ class StorageClientTest {
     @Disabled
     void uploadFile() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
-        assertFalse(responseWrapper.body().isEmpty());
-        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body()));
+        assertFalse(responseWrapper.body().key().isEmpty());
+        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body().id()));
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -359,13 +360,13 @@ class StorageClientTest {
     @Disabled
     void updateFile() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(testBucketId, testFileId, testFileModifiedContents.getBytes());
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
-        assertFalse(responseWrapper.body().isEmpty());
-        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body()));
+        assertFalse(responseWrapper.body().key().isEmpty());
+        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body().id()));
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -375,7 +376,7 @@ class StorageClientTest {
     @Disabled
     void updateFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(nonexistentBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
 
         assertNotNull(responseWrapper);
@@ -393,7 +394,7 @@ class StorageClientTest {
     @Disabled
     void updateFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(testBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
 
         assertNotNull(responseWrapper);
