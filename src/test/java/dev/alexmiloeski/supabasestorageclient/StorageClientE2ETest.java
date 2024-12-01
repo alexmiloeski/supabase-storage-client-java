@@ -557,7 +557,12 @@ class StorageClientE2ETest {
     @Order(60)
     @Disabled
     void healthCheck() {
-        boolean isHealthy = storageClient.isHealthy();
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
+
+        assertNotNull(responseWrapper);
+        boolean isHealthy = responseWrapper.body();
         assertTrue(isHealthy);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
     }
 }
