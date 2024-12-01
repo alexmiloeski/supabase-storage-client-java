@@ -99,37 +99,7 @@ class RequestMaker {
         return this;
     }
 
-    String make() {
-        final String _path = path == null ? "" : "/" + path;
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl + STORAGE_PATH + resource + _path));
-        if (apiKey != null) {
-            builder = builder.header("Authorization", "Bearer " + apiKey);
-        }
-        if (contentType != null) {
-            builder = builder.header("Content-Type", contentType);
-        }
-        builder = switch (method) {
-            default -> builder.GET();
-            case POST -> builder.POST(body);
-            case PUT -> builder.PUT(body);
-            case DELETE -> builder.DELETE();
-        };
-
-        HttpRequest request = builder.build();
-
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
-        } catch (IOException | InterruptedException e) {
-//            throw new RuntimeException(e);
-            e.printStackTrace();
-            System.out.println("IOException YO!");
-        }
-        return null;
-    }
-
-    ResponseWrapper<String> makeWithWrapper() {
+    ResponseWrapper<String> make() {
         final String _path = path == null ? "" : "/" + path;
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(apiUrl + STORAGE_PATH + resource + _path));

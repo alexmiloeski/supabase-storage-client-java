@@ -40,7 +40,8 @@ class StorageClientUnitTest {
 
     @Test
     void healthCheckReturnsHealthy() {
-        when(mockRequestMaker.make()).thenReturn(HEALTHY_JSON);
+        when(mockRequestMaker.make()).thenReturn(
+                new ResponseWrapper<>(HEALTHY_JSON, null, null));
 
         ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
 
@@ -53,7 +54,7 @@ class StorageClientUnitTest {
 
     @Test
     void listBucketsReturnsBuckets() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(LIST_BUCKETS_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
@@ -66,7 +67,7 @@ class StorageClientUnitTest {
 
     @Test
     void getBucketReturnsBucket() {
-        when(mockRequestMaker.makeWithWrapper())
+        when(mockRequestMaker.make())
                 .thenReturn(new ResponseWrapper<>(BUCKET_JSON, null, null));
 
         final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
@@ -79,7 +80,7 @@ class StorageClientUnitTest {
 
     @Test
     void getBucketWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -99,7 +100,7 @@ class StorageClientUnitTest {
 
     @Test
     void createBucketReturnsProperResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(BUCKET_CREATED_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.createBucketWithWrapper(
@@ -112,7 +113,7 @@ class StorageClientUnitTest {
 
     @Test
     void createBucketWithDuplicateNameReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -133,7 +134,7 @@ class StorageClientUnitTest {
     @Test
     void emptyBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully emptied";
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
@@ -146,7 +147,7 @@ class StorageClientUnitTest {
 
     @Test
     void emptyBucketWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -166,7 +167,7 @@ class StorageClientUnitTest {
     @Test
     void updateBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully updated";
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
@@ -180,7 +181,7 @@ class StorageClientUnitTest {
 
     @Test
     void updateBucketWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -201,7 +202,7 @@ class StorageClientUnitTest {
     @Test
     void deleteEmptyBucketReturnsSuccessMessage() {
         final String expectedMessage = "Successfully deleted";
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
@@ -214,7 +215,7 @@ class StorageClientUnitTest {
 
     @Test
     void deleteNonEmptyBucketReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -233,7 +234,7 @@ class StorageClientUnitTest {
 
     @Test
     void listFilesInBucketReturnsObjects() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(LIST_FILES_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_ID);
@@ -246,7 +247,7 @@ class StorageClientUnitTest {
 
     @Test
     void listFilesInBucketWithFolderReturnsObjects() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(LIST_FILES_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(
@@ -260,7 +261,7 @@ class StorageClientUnitTest {
 
     @Test
     void listFilesWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -280,7 +281,7 @@ class StorageClientUnitTest {
 
     @Test
     void downloadFileReturnsFileContents() {
-        when(mockRequestMaker.makeWithWrapper())
+        when(mockRequestMaker.make())
                 .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
 
         final ResponseWrapper<String> responseWrapper =
@@ -294,7 +295,7 @@ class StorageClientUnitTest {
 
     @Test
     void downloadFileBytesReturnsFileContentsInBytes() {
-        when(mockRequestMaker.makeWithWrapper())
+        when(mockRequestMaker.make())
                 .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
 
         final ResponseWrapper<byte[]> responseWrapper =
@@ -308,7 +309,7 @@ class StorageClientUnitTest {
 
     @Test
     void downloadFileWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -328,7 +329,7 @@ class StorageClientUnitTest {
 
     @Test
     void updateFileReturnsProperResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
@@ -343,7 +344,7 @@ class StorageClientUnitTest {
 
     @Test
     void updateFileWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -363,7 +364,7 @@ class StorageClientUnitTest {
 
     @Test
     void uploadFileReturnsProperResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
@@ -378,7 +379,7 @@ class StorageClientUnitTest {
 
     @Test
     void uploadFileWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -399,7 +400,7 @@ class StorageClientUnitTest {
     @Test
     void deleteFileReturnsProperResponse() {
         final String expectedMessage = "Successfully deleted";
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper =
@@ -414,7 +415,7 @@ class StorageClientUnitTest {
 
     @Test
     void deleteFileWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
@@ -435,7 +436,7 @@ class StorageClientUnitTest {
     @Test
     void moveFileReturnsProperResponse() {
         final String expectedMessage = "Successfully moved";
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
@@ -450,7 +451,7 @@ class StorageClientUnitTest {
 
     @Test
     void moveFileWithWrongParamsReturnsErrorResponse() {
-        when(mockRequestMaker.makeWithWrapper()).thenReturn(
+        when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(null, new ErrorResponse(
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));

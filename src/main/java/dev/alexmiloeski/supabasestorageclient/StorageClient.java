@@ -34,7 +34,7 @@ public class StorageClient {
     public ResponseWrapper<Boolean> isHealthy() {
         ResponseWrapper<String> rw = newRequest()
                 .path("health")
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 HashMap<String, Object> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
@@ -87,7 +87,7 @@ public class StorageClient {
     public ResponseWrapper<List<Bucket>> listBucketsWithWrapper() {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 List<Bucket> buckets = Mapper.toBuckets(rw.body());
@@ -120,7 +120,7 @@ public class StorageClient {
             ResponseWrapper<String> rw = newRequest()
                     .bucket()
                     .path(bucketId)
-                    .makeWithWrapper();
+                    .make();
             if (rw.body() != null) {
                 Bucket bucket = Mapper.toBucket(rw.body());
                 return new ResponseWrapper<>(bucket, null, null);
@@ -160,7 +160,7 @@ public class StorageClient {
                     .bucket()
                     .post(json)
                     .jsonContent()
-                    .makeWithWrapper();
+                    .make();
             if (rw.body() != null) {
                 Bucket bucket = Mapper.toBucket(rw.body());
                 return new ResponseWrapper<>(bucket.name(), null, null);
@@ -182,7 +182,7 @@ public class StorageClient {
                 .bucket()
                 .delete()
                 .path(id)
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
@@ -205,7 +205,7 @@ public class StorageClient {
                 .bucket()
                 .post()
                 .path(id + "/empty")
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
@@ -249,7 +249,7 @@ public class StorageClient {
                 .put(json)
                 .jsonContent()
                 .path(id)
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
@@ -330,7 +330,7 @@ public class StorageClient {
                         {"limit":%d,"offset":%d,"sortBy":{"column":"name","order":"asc"},"prefix":"%s"}"""
                         .formatted(limit, offset, folderId))
                 .jsonContent()
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 List<FileObject> objects = Mapper.toObjects(rw.body());
@@ -378,7 +378,7 @@ public class StorageClient {
         ResponseWrapper<String> rw = newRequest()
                 .object()
                 .path("/info/authenticated/%s/%s%s".formatted(bucketId, _folderName, fileName))
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 FileObjectInfo objectInfo = Mapper.toObjectInfo(rw.body());
@@ -415,7 +415,7 @@ public class StorageClient {
         return newRequest()
                 .object()
                 .path(bucketId + "/" + fileName)
-                .makeWithWrapper();
+                .make();
     }
 
     public ResponseWrapper<byte[]> downloadFileBytes(final String bucketId, final String fileName) {
@@ -457,7 +457,7 @@ public class StorageClient {
                 .object()
                 .path(bucketId + "/" + fileName)
                 .post(bytes)
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 FileObjectIdentity identity = Mapper.toIdentity(rw.body());
@@ -486,7 +486,7 @@ public class StorageClient {
                 .object()
                 .path(bucketId + "/" + fileName)
                 .delete()
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
@@ -525,7 +525,7 @@ public class StorageClient {
                 .object()
                 .path(bucketId + "/" + fileName)
                 .put(bytes)
-                .makeWithWrapper();
+                .make();
         try {
             if (rw.body() != null) {
                 FileObjectIdentity identity = Mapper.toIdentity(rw.body());
@@ -557,7 +557,7 @@ public class StorageClient {
                     .path("move")
                     .post(json)
                     .jsonContent()
-                    .makeWithWrapper();
+                    .make();
             if (rw.body() != null) {
                 HashMap<String, String> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
                 return new ResponseWrapper<>(resMap.get("message"), null, null);
