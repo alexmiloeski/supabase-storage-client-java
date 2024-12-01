@@ -12,20 +12,12 @@ import org.junit.jupiter.api.*;
 
 import java.util.List;
 
+import static dev.alexmiloeski.supabasestorageclient.Arrange.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StorageClientE2ETest {
-
-    final String testBucketId = "test-bucket-" + System.currentTimeMillis();
-    final String testFileId = "test-file-" + System.currentTimeMillis();
-    final String testFolderId = "test-folder-" + System.currentTimeMillis();
-    final String movedTestFilePath = testFolderId + "/" + testFileId;
-    final String nonexistentFileId = "test-bucket";
-    final String nonexistentBucketId = "nonexistent-bucket";
-    final String testFileContents = "Test file contents.";
-    final String testFileModifiedContents = "Test file modified contents.";
 
     StorageClient storageClient;
 
@@ -41,15 +33,15 @@ class StorageClientE2ETest {
     @Order(10)
     @Disabled
     void createBucket() {
-        String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
-        assertEquals(testBucketId, testBucketIdRes);
+        String testBucketIdRes = storageClient.createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
+        assertEquals(TEST_BUCKET_ID, testBucketIdRes);
     }
 
     @Test
     @Order(15)
     @Disabled
     void createBucketWithDuplicateNameShouldReturnNull() {
-        String testBucketIdRes = storageClient.createBucket(testBucketId, testBucketId, false, null, null);
+        String testBucketIdRes = storageClient.createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
         assertNull(testBucketIdRes);
     }
 
@@ -58,12 +50,12 @@ class StorageClientE2ETest {
     @Disabled
     void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
         ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
+                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
-        assertEquals(testBucketId, responseWrapper.body());
+        assertEquals(TEST_BUCKET_NAME, responseWrapper.body());
     }
 
     @Test
@@ -75,7 +67,7 @@ class StorageClientE2ETest {
         String message = "The resource already exists";
 
         ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(testBucketId, testBucketId, false, null, null);
+                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -114,7 +106,7 @@ class StorageClientE2ETest {
         List<Bucket> buckets = storageClient.listBuckets();
         assertNotNull(buckets);
         assertTrue(buckets.size() > 1);
-        assertTrue(buckets.stream().anyMatch(b -> testBucketId.equals(b.name())));
+        assertTrue(buckets.stream().anyMatch(b -> TEST_BUCKET_NAME.equals(b.name())));
     }
 
     @Test
@@ -130,7 +122,7 @@ class StorageClientE2ETest {
         List<Bucket> buckets = responseWrapper.body();
         assertNotNull(buckets);
         assertTrue(buckets.size() > 1);
-        assertTrue(buckets.stream().anyMatch(b -> testBucketId.equals(b.name())));
+        assertTrue(buckets.stream().anyMatch(b -> TEST_BUCKET_NAME.equals(b.name())));
     }
 
     @Test
@@ -138,9 +130,9 @@ class StorageClientE2ETest {
     @Disabled
     void getBucket() throws InterruptedException {
         Thread.sleep(100);
-        Bucket bucket = storageClient.getBucket(testBucketId);
+        Bucket bucket = storageClient.getBucket(TEST_BUCKET_ID);
         assertNotNull(bucket);
-        assertEquals(testBucketId, bucket.id());
+        assertEquals(TEST_BUCKET_ID, bucket.id());
     }
 
     @Test
@@ -148,14 +140,14 @@ class StorageClientE2ETest {
     @Disabled
     void getBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(testBucketId);
+        ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
         Bucket bucket = responseWrapper.body();
         assertNotNull(bucket);
-        assertEquals(testBucketId, bucket.id());
+        assertEquals(TEST_BUCKET_ID, bucket.id());
     }
 
     @Test
@@ -163,17 +155,17 @@ class StorageClientE2ETest {
     @Disabled
     void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
-        String message = storageClient.emptyBucket(testBucketId);
+        String message = storageClient.emptyBucket(TEST_BUCKET_ID);
         assertNotNull(message);
         assertFalse(message.isEmpty());
     }
 
     @Test
-    @Order(200)
+    @Order(210)
     @Disabled
     void emptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(testBucketId);
+        ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -188,7 +180,7 @@ class StorageClientE2ETest {
     @Disabled
     void updateBucket() throws InterruptedException {
         Thread.sleep(100);
-        String message = storageClient.updateBucket(testBucketId, false, 0, null);
+        String message = storageClient.updateBucket(TEST_BUCKET_ID, false, 0, null);
         assertNotNull(message);
         assertFalse(message.isEmpty());
     }
@@ -199,7 +191,7 @@ class StorageClientE2ETest {
     void updateBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(testBucketId, null, false, 0, null);
+                .updateBucketWithWrapper(TEST_BUCKET_ID, null, true, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -214,7 +206,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteNonEmptyBucketWithWrapperReturnsError() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -231,7 +223,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteEmptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(testBucketId);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         String message = responseWrapper.body();
@@ -247,11 +239,11 @@ class StorageClientE2ETest {
     void uploadFile() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
+                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         FileObjectIdentity identity = responseWrapper.body();
-        assertEquals(testBucketId + "/" + testFileId, identity.key());
+        assertEquals(TEST_BUCKET_ID + "/" + TEST_FILE_NAME, identity.key());
         assertNotNull(identity.id());
         assertFalse(identity.id().isEmpty());
         assertNull(responseWrapper.errorResponse());
@@ -271,7 +263,7 @@ class StorageClientE2ETest {
         final String message = "The resource already exists";
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
+                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -294,7 +286,7 @@ class StorageClientE2ETest {
         final String message = "Bucket not found";
 
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(nonexistentBucketId, testFileId, testFileContents.getBytes());
+                .uploadFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -315,7 +307,7 @@ class StorageClientE2ETest {
     @Disabled
     void listFilesInBucket() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(testBucketId);
+        ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -330,8 +322,8 @@ class StorageClientE2ETest {
     void listFilesInBucketWithFolder() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<List<FileObject>> responseWrapper = storageClient.listFilesInBucket(
-                testBucketId,
-                new ListFilesOptions(testFolderId, null, null));
+                TEST_BUCKET_ID,
+                new ListFilesOptions(TEST_FOLDER_NAME, null, null));
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -346,11 +338,11 @@ class StorageClientE2ETest {
     void downloadFile() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .downloadFile(testBucketId, testFileId);
+                .downloadFile(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
-        assertEquals(testFileContents, responseWrapper.body());
+        assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -361,12 +353,12 @@ class StorageClientE2ETest {
     void downloadFileBytes() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<byte[]> responseWrapper = storageClient
-                .downloadFileBytes(testBucketId, testFileId);
+                .downloadFileBytes(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
         final String stringBody = new String(responseWrapper.body());
-        assertEquals(testFileContents, stringBody);
+        assertEquals(TEST_FILE_CONTENTS, stringBody);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -377,7 +369,7 @@ class StorageClientE2ETest {
     void downloadFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .downloadFile(nonexistentBucketId, nonexistentFileId);
+                .downloadFile(NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -395,7 +387,7 @@ class StorageClientE2ETest {
     void downloadFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .downloadFile(testBucketId, nonexistentFileId);
+                .downloadFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -413,12 +405,12 @@ class StorageClientE2ETest {
     void updateFile() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(testBucketId, testFileId, testFileModifiedContents.getBytes());
+                .updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         FileObjectIdentity identity = responseWrapper.body();
         assertNotNull(identity);
-        assertEquals(testBucketId + "/" + testFileId, identity.key());
+        assertEquals(TEST_BUCKET_ID + "/" + TEST_FILE_NAME, identity.key());
         assertNotNull(identity.id());
         assertFalse(identity.id().isEmpty());
         assertNull(responseWrapper.errorResponse());
@@ -431,7 +423,7 @@ class StorageClientE2ETest {
     void updateFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(nonexistentBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
+                .updateFile(NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -449,7 +441,7 @@ class StorageClientE2ETest {
     void updateFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(testBucketId, nonexistentFileId, testFileModifiedContents.getBytes());
+                .updateFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -467,7 +459,7 @@ class StorageClientE2ETest {
     void moveFile() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
-                testBucketId, testFileId, testBucketId, movedTestFilePath));
+                TEST_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -482,7 +474,7 @@ class StorageClientE2ETest {
     void moveFileWithWrongSourceBucketReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
-                nonexistentBucketId, testFileId, testBucketId, movedTestFilePath));
+                NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
         assertNotNull(responseWrapper);
         final ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -499,7 +491,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteFile() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteFile(testBucketId, movedTestFilePath);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteFile(TEST_BUCKET_ID, MOVED_TEST_FILE_PATH);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
@@ -514,7 +506,7 @@ class StorageClientE2ETest {
     void deleteFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .deleteFile(testBucketId, nonexistentFileId);
+                .deleteFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
