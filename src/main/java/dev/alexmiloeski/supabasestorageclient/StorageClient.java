@@ -48,7 +48,7 @@ public class StorageClient {
                                     + healthyO), null);
                 }
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -93,7 +93,7 @@ public class StorageClient {
                 List<Bucket> buckets = Mapper.toBuckets(rw.body());
                 return new ResponseWrapper<>(buckets, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -125,7 +125,7 @@ public class StorageClient {
                 Bucket bucket = Mapper.toBucket(rw.body());
                 return new ResponseWrapper<>(bucket, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -336,7 +336,7 @@ public class StorageClient {
                 List<FileObject> objects = Mapper.toObjects(rw.body());
                 return new ResponseWrapper<>(objects, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -384,7 +384,7 @@ public class StorageClient {
                 FileObjectInfo objectInfo = Mapper.toObjectInfo(rw.body());
                 return new ResponseWrapper<>(objectInfo, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -463,7 +463,7 @@ public class StorageClient {
                 FileObjectIdentity identity = Mapper.toIdentity(rw.body());
                 return new ResponseWrapper<>(identity, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
@@ -531,7 +531,7 @@ public class StorageClient {
                 FileObjectIdentity identity = Mapper.toIdentity(rw.body());
                 return new ResponseWrapper<>(identity, null, null);
             }
-            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+            return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CONVERTING TO JSON!");
