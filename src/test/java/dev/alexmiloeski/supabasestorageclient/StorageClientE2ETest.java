@@ -2,6 +2,7 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
@@ -328,6 +329,40 @@ class StorageClientE2ETest {
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
         assertFalse(responseWrapper.body().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(65)
+    @Disabled
+    void getFileInfoReturnsFileObjectInfo() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<FileObjectInfo> responseWrapper = storageClient.getFileInfo(
+                TEST_BUCKET_ID, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        final FileObjectInfo fileInfo = responseWrapper.body();
+        assertNotNull(fileInfo);
+        assertEquals(TEST_FILE_NAME, fileInfo.name());
+        assertFalse(fileInfo.id().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(65)
+    @Disabled
+    void getFileInfoWithFolderReturnsFileObjectInfo() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<FileObjectInfo> responseWrapper = storageClient.getFileInfo(
+                TEST_BUCKET_ID, TEST_FOLDER_NAME, TEST_FILE_NAME);
+
+        assertNotNull(responseWrapper);
+        final FileObjectInfo fileInfo = responseWrapper.body();
+        assertNotNull(fileInfo);
+        assertEquals(TEST_FOLDER_NAME + "/" + TEST_FILE_NAME, fileInfo.name());
+        assertFalse(fileInfo.id().isEmpty());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
