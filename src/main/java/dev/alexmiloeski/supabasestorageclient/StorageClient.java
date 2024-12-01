@@ -223,7 +223,7 @@ public class StorageClient {
      *   "id": "test-bucket-id",
      *   "name": "test-bucket-name",
      *   "public": true,
-     *   "file_size_limit": 0,
+     *   "file_size_limit": 10000,
      *   "allowed_mime_types": ["image/jpeg"]
      * }
      * REST response body example:
@@ -564,6 +564,12 @@ public class StorageClient {
      *     "statusCode": "404",
      *     "error": "Bucket not found",
      *     "message": "Bucket not found"
+     * }
+     * REST error response body example for file too big:
+     {
+     *     "statusCode": "413",
+     *     "error": "Payload too large",
+     *     "message": "The object exceeded the maximum allowed size"
      * }
      */
     public ResponseWrapper<FileObjectIdentity> uploadFile(
