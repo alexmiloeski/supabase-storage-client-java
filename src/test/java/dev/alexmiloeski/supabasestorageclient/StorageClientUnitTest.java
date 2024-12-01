@@ -42,9 +42,13 @@ class StorageClientUnitTest {
     void healthCheckReturnsHealthy() {
         when(mockRequestMaker.make()).thenReturn(HEALTHY_JSON);
 
-        final boolean isHealthy = storageClient.isHealthy();
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
 
+        assertNotNull(responseWrapper);
+        boolean isHealthy = responseWrapper.body();
         assertTrue(isHealthy);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
