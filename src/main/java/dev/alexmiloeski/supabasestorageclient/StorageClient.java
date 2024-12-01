@@ -7,6 +7,7 @@ import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 
@@ -26,20 +27,33 @@ public class StorageClient {
         return apiUrl;
     }
 
-    public boolean isHealthy() {
-        // GET url/storage/v1/health
-        String body = newRequest()
+    /**
+     * REST GET url/storage/v1/health
+     * REST response body example: {"healthy":true}
+     */
+    public ResponseWrapper<Boolean> isHealthy() {
+        ResponseWrapper<String> rw = newRequest()
                 .path("health")
-                .make();
+                .makeWithWrapper();
         try {
-            HashMap<String, Object> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
-            Object healthyO = resMap.get("healthy");
-            if (healthyO instanceof Boolean) {
-                return (boolean) healthyO;
+            if (rw.body() != null) {
+                HashMap<String, Object> resMap = Mapper.mapper.readValue(rw.body(), new TypeReference<>() {});
+                Object healthyO = resMap.get("healthy");
+                if (healthyO instanceof Boolean healthy) {
+                    return new ResponseWrapper<>(healthy, null, null);
+                } else {
+                    return new ResponseWrapper<>(null, new ErrorResponse("",
+                            "healthy_not_boolean",
+                            "The received value of 'healthy' was not a boolean; its value was: "
+                                    + healthyO), null);
+                }
             }
-        } catch (Exception ignore) {}
-        return false;
-        //{"healthy":true}
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
     }
 
     /**
