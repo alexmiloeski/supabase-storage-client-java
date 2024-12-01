@@ -249,9 +249,10 @@ class StorageClientE2ETest {
                 .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
 
         assertNotNull(responseWrapper);
-        assertNotNull(responseWrapper.body());
-        assertFalse(responseWrapper.body().key().isEmpty());
-        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body().id()));
+        FileObjectIdentity identity = responseWrapper.body();
+        assertEquals(testBucketId + "/" + testFileId, identity.key());
+        assertNotNull(identity.id());
+        assertFalse(identity.id().isEmpty());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -364,9 +365,11 @@ class StorageClientE2ETest {
                 .updateFile(testBucketId, testFileId, testFileModifiedContents.getBytes());
 
         assertNotNull(responseWrapper);
-        assertNotNull(responseWrapper.body());
-        assertFalse(responseWrapper.body().key().isEmpty());
-        assertDoesNotThrow(() -> UUID.fromString(responseWrapper.body().id()));
+        FileObjectIdentity identity = responseWrapper.body();
+        assertNotNull(identity);
+        assertEquals(testBucketId + "/" + testFileId, identity.key());
+        assertNotNull(identity.id());
+        assertFalse(identity.id().isEmpty());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
