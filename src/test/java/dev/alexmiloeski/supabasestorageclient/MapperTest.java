@@ -2,6 +2,7 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,13 @@ class MapperTest {
         final List<FileObject> objects = Mapper.toObjects(LIST_FILES_JSON_RESPONSE);
         assertNotNull(objects);
         assertEquals(EXPECTED_LIST_FILES_OBJECTS, objects);
+    }
+
+    @Test
+    void mapsToObjectInfo() {
+        final FileObjectInfo objectInfo = Mapper.toObjectInfo(LIST_FILES_JSON_RESPONSE);
+        assertNotNull(objectInfo);
+        assertEquals(EXPECTED_FILE_OBJECT_INFO, objectInfo);
     }
 
     @Test
