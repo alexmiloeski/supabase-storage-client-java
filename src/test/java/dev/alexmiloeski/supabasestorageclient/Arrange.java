@@ -2,6 +2,7 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import org.mockito.ArgumentMatcher;
 
@@ -30,6 +31,7 @@ public class Arrange {
     static final String NONEXISTENT_FILE_NAME = "nonexistent-file-name";
     static final String NONEXISTENT_FILE_ID = "d0b2f30d-46f5-45a0-1231-f2d063c84d40";
     static final String NONEXISTENT_BUCKET_ID = "nonexistent-bucket";
+    static final String VERSION_ID = "659f2132-c237-4e62-87ea-bc596398ec1d";
     static final String TEST_FILE_CONTENTS = "Test file contents.";
     static final String TEST_FILE_MODIFIED_CONTENTS = "Test file modified contents.";
     static final Bucket EXPECTED_BUCKET = new Bucket(TEST_BUCKET_NAME, TEST_BUCKET_NAME, null,
@@ -56,6 +58,9 @@ public class Arrange {
                     new FileObject.Metadata(E_TAG_EXPECTED, CONTENT_LENGTH, MIME_TYPE,
                             CACHE_CONTROL, TEST_DATE, CONTENT_LENGTH, STATUS_CODE))
     );
+    static final FileObjectInfo EXPECTED_FILE_OBJECT_INFO =
+            new FileObjectInfo(TEST_FILE_ID, TEST_FILE_NAME, VERSION_ID, CONTENT_LENGTH,
+                    MIME_TYPE, CACHE_CONTROL, E_TAG_EXPECTED, TEST_DATE);
     static final String LIST_FILES_JSON_RESPONSE = """
                 [
                     {
