@@ -569,6 +569,7 @@ public class StorageClient {
     public ResponseWrapper<FileObjectIdentity> uploadFile(
             final String bucketId, final String fileName, byte[] bytes
     ) {
+        // todo: what about Content-Type header? is it needed at all?
         ResponseWrapper<String> rw = newRequest()
                 .object()
                 .path(bucketId + "/" + fileName)
