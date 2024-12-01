@@ -33,7 +33,7 @@ class StorageClientE2ETest {
     @Test
     @Order(10)
     @Disabled
-    void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
+    void createBucketWithValidNameReturnsBodyWithName() {
         ResponseWrapper<String> responseWrapper = storageClient
                 .createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
@@ -46,7 +46,7 @@ class StorageClientE2ETest {
     @Test
     @Order(14)
     @Disabled
-    void createBucketWithWrapperWithDuplicateNameReturnsErrorResponse() {
+    void createBucketWithDuplicateNameReturnsErrorResponse() {
         String statusCode = "409";
         String error = "Duplicate";
         String message = "The resource already exists";
@@ -67,7 +67,7 @@ class StorageClientE2ETest {
     @Test
     @Order(17)
     @Disabled
-    void createBucketWithWrapperWithInvalidNameReturnsErrorResponse() {
+    void createBucketWithInvalidNameReturnsErrorResponse() {
         ResponseWrapper<String> responseWrapper = storageClient
                 .createBucket(null, null, false, null, null);
 
@@ -86,7 +86,7 @@ class StorageClientE2ETest {
     @Test
     @Order(20)
     @Disabled
-    void listBucketsWithWrapper() throws InterruptedException {
+    void listBuckets() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBuckets();
 
@@ -102,7 +102,7 @@ class StorageClientE2ETest {
     @Test
     @Order(25)
     @Disabled
-    void getBucketWithWrapper() throws InterruptedException {
+    void getBucket() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<Bucket> responseWrapper = storageClient.getBucket(TEST_BUCKET_ID);
 
@@ -117,7 +117,7 @@ class StorageClientE2ETest {
     @Test
     @Order(210)
     @Disabled
-    void emptyBucketWithWrapper() throws InterruptedException {
+    void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
@@ -132,7 +132,7 @@ class StorageClientE2ETest {
     @Test
     @Order(40)
     @Disabled
-    void updateBucketWithWrapper() throws InterruptedException {
+    void updateBucket() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
                 .updateBucket(TEST_BUCKET_ID, null, true, null, null);
@@ -148,7 +148,7 @@ class StorageClientE2ETest {
     @Test
     @Order(200)
     @Disabled
-    void deleteNonEmptyBucketWithWrapperReturnsError() throws InterruptedException {
+    void deleteNonEmptyBucketReturnsError() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
@@ -165,7 +165,7 @@ class StorageClientE2ETest {
     @Test
     @Order(220)
     @Disabled
-    void deleteEmptyBucketWithWrapper() throws InterruptedException {
+    void deleteEmptyBucket() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
@@ -493,19 +493,6 @@ class StorageClientE2ETest {
         assertEquals("not_found", errorResponse.error());
         assertEquals("Object not found", errorResponse.message());
         assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
-    }
-
-    @Test
-    @Order(60)
-    @Disabled
-    void healthCheck() {
-        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
-
-        assertNotNull(responseWrapper);
-        boolean isHealthy = responseWrapper.body();
-        assertTrue(isHealthy);
-        assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
 }
