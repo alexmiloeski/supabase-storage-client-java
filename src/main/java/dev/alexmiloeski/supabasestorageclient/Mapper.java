@@ -65,8 +65,10 @@ class Mapper {
         }
     }
 
-    static ErrorResponse toErrorResponse(String json) {
+    static ErrorResponse toErrorResponse(String json, int statusCode) {
         if (json == null) return null;
+        if (json.trim().isEmpty()) return new ErrorResponse(statusCode + "",
+                "no_response", "The response did not contain a body.");
         try {
             return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
