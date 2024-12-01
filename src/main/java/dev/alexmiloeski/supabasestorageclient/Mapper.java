@@ -80,6 +80,10 @@ class Mapper {
         }
     }
 
+    static ErrorResponse toErrorResponse(String json) {
+        return toErrorResponse(json, 0);
+    }
+
     static FileObjectIdentity toIdentity(String json) {
         if (json == null) return null;
         try {
