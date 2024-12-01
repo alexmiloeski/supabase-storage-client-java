@@ -10,7 +10,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +20,7 @@ class StorageClientE2ETest {
     final String testBucketId = "test-bucket-" + System.currentTimeMillis();
     final String testFileId = "test-file-" + System.currentTimeMillis();
     final String testFolderId = "test-folder-" + System.currentTimeMillis();
+    final String movedTestFilePath = testFolderId + "/" + testFileId;
     final String nonexistentFileId = "test-bucket";
     final String nonexistentBucketId = "nonexistent-bucket";
     final String testFileContents = "Test file contents.";
@@ -415,7 +415,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteFile() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteFile(testBucketId, testFileId);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteFile(testBucketId, movedTestFilePath);
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
