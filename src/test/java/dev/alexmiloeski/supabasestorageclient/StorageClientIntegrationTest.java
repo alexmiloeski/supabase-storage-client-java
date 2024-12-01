@@ -41,24 +41,39 @@ public class StorageClientIntegrationTest {
     void healthCheckReturnsTrue() {
         stubFor(get(STORAGE_PATH + "/health").willReturn(ok().withBody(HEALTHY_JSON)));
 
-        final boolean isHealthy = storageClient.isHealthy();
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
+
+        assertNotNull(responseWrapper);
+        boolean isHealthy = responseWrapper.body();
         assertTrue(isHealthy);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
     void healthCheckReturnsFalseWhenServerSaysFalse() {
         stubFor(get(STORAGE_PATH + "/health").willReturn(ok().withBody(UNHEALTHY_JSON)));
 
-        final boolean isHealthy = storageClient.isHealthy();
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
+
+        assertNotNull(responseWrapper);
+        boolean isHealthy = responseWrapper.body();
         assertFalse(isHealthy);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
-    void healthCheckReturnsFalseWhenServerErrors() {
+    void healthCheckReturnsNullAndErrorWhenServerErrors() {
         stubFor(get(STORAGE_PATH + "/health").willReturn(serverError()));
 
-        final boolean isHealthy = storageClient.isHealthy();
-        assertFalse(isHealthy);
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.errorResponse());
+        assertEquals("500", responseWrapper.errorResponse().statusCode());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
     }
 
     @Test
