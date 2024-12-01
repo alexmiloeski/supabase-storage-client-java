@@ -3,6 +3,7 @@ package dev.alexmiloeski.supabasestorageclient;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
+import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -131,5 +132,20 @@ class MapperTest {
                 {"anotherField":""}""";
         final Exception exception = assertThrows(RuntimeException.class, () -> Mapper.toErrorResponse(errorJson));
         assertTrue(exception.getMessage().contains(MISSING_FIELDS_MESSAGE));
+    }
+
+    @Test
+    void mapsToFileObjectIdentity() {
+        final String key = "test-bucket/test-file.txt";
+        final String id = "2650a5da-be5d-49f0-919f-28ca78bffb99";
+        final String json = """
+                {
+                    "Key": "%s",
+                    "Id": "%s"
+                }""".formatted(key, id);
+        final FileObjectIdentity expected = new FileObjectIdentity(key, id);
+
+        FileObjectIdentity actual = Mapper.toIdentity(json);
+        assertEquals(expected, actual);
     }
 }
