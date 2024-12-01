@@ -33,22 +33,6 @@ class StorageClientE2ETest {
     @Test
     @Order(10)
     @Disabled
-    void createBucket() {
-        String testBucketIdRes = storageClient.createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
-        assertEquals(TEST_BUCKET_ID, testBucketIdRes);
-    }
-
-    @Test
-    @Order(15)
-    @Disabled
-    void createBucketWithDuplicateNameShouldReturnNull() {
-        String testBucketIdRes = storageClient.createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
-        assertNull(testBucketIdRes);
-    }
-
-    @Test
-    @Order(10)
-    @Disabled
     void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
         ResponseWrapper<String> responseWrapper = storageClient
                 .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
@@ -102,17 +86,6 @@ class StorageClientE2ETest {
     @Test
     @Order(20)
     @Disabled
-    void listBuckets() throws InterruptedException {
-        Thread.sleep(100);
-        List<Bucket> buckets = storageClient.listBuckets();
-        assertNotNull(buckets);
-        assertTrue(buckets.size() > 1);
-        assertTrue(buckets.stream().anyMatch(b -> TEST_BUCKET_NAME.equals(b.name())));
-    }
-
-    @Test
-    @Order(20)
-    @Disabled
     void listBucketsWithWrapper() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
@@ -124,16 +97,6 @@ class StorageClientE2ETest {
         assertNotNull(buckets);
         assertTrue(buckets.size() > 1);
         assertTrue(buckets.stream().anyMatch(b -> TEST_BUCKET_NAME.equals(b.name())));
-    }
-
-    @Test
-    @Order(25)
-    @Disabled
-    void getBucket() throws InterruptedException {
-        Thread.sleep(100);
-        Bucket bucket = storageClient.getBucket(TEST_BUCKET_ID);
-        assertNotNull(bucket);
-        assertEquals(TEST_BUCKET_ID, bucket.id());
     }
 
     @Test
@@ -152,16 +115,6 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(200)
-    @Disabled
-    void emptyBucket() throws InterruptedException {
-        Thread.sleep(100);
-        String message = storageClient.emptyBucket(TEST_BUCKET_ID);
-        assertNotNull(message);
-        assertFalse(message.isEmpty());
-    }
-
-    @Test
     @Order(210)
     @Disabled
     void emptyBucketWithWrapper() throws InterruptedException {
@@ -172,16 +125,6 @@ class StorageClientE2ETest {
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
         String message = responseWrapper.body();
-        assertNotNull(message);
-        assertFalse(message.isEmpty());
-    }
-
-    @Test
-    @Order(40)
-    @Disabled
-    void updateBucket() throws InterruptedException {
-        Thread.sleep(100);
-        String message = storageClient.updateBucket(TEST_BUCKET_ID, false, 0, null);
         assertNotNull(message);
         assertFalse(message.isEmpty());
     }
