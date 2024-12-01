@@ -84,7 +84,7 @@ public class StorageClient {
      *     }
      * ]
      */
-    public ResponseWrapper<List<Bucket>> listBucketsWithWrapper() {
+    public ResponseWrapper<List<Bucket>> listBuckets() {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
                 .make();
@@ -115,7 +115,7 @@ public class StorageClient {
      *     "updated_at": "2024-11-12T19:13:16.984Z"
      * }
      */
-    public ResponseWrapper<Bucket> getBucketWithWrapper(final String bucketId) {
+    public ResponseWrapper<Bucket> getBucket(final String bucketId) {
         try {
             ResponseWrapper<String> rw = newRequest()
                     .bucket()
@@ -148,8 +148,8 @@ public class StorageClient {
      *     "name": "test-bucket-name"
      * }
      */
-    public ResponseWrapper<String> createBucketWithWrapper(String id, String name, boolean isPublic,
-                                                   Integer fileSizeLimit, List<String> allowedMimeTypes) {
+    public ResponseWrapper<String> createBucket(String id, String name, boolean isPublic,
+                                                Integer fileSizeLimit, List<String> allowedMimeTypes) {
         // POST url/storage/v1/bucket
         Bucket newBucket = new Bucket(
                 id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
@@ -177,7 +177,7 @@ public class StorageClient {
      * REST DELETE url/storage/v1/bucket/some-bucket
      * REST response body example: {"message":"Successfully deleted"}
      */
-    public ResponseWrapper<String> deleteBucketWithWrapper(String id) {
+    public ResponseWrapper<String> deleteBucket(String id) {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
                 .delete()
@@ -200,7 +200,7 @@ public class StorageClient {
      * REST POST url/storage/v1/bucket/some-bucket/empty
      * REST response body example: {"message":"Successfully emptied"}
      */
-    public ResponseWrapper<String> emptyBucketWithWrapper(String id) {
+    public ResponseWrapper<String> emptyBucket(String id) {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
                 .post()
@@ -231,7 +231,7 @@ public class StorageClient {
      * }
      * REST response body example: {"message":"Successfully updated"}
      */
-    public ResponseWrapper<String> updateBucketWithWrapper(
+    public ResponseWrapper<String> updateBucket(
             String id, String owner, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes
     ) {
         Bucket newBucket = new Bucket(

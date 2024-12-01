@@ -80,7 +80,7 @@ public class StorageClientIntegrationTest {
     void listBucketsReturnsBuckets() {
         stubFor(get(BUCKET_PATH).willReturn(ok().withBody(LIST_BUCKETS_JSON_RESPONSE)));
 
-        final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
+        final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBuckets();
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_BUCKETS, responseWrapper.body());
@@ -93,7 +93,7 @@ public class StorageClientIntegrationTest {
         stubFor(get(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(BUCKET_JSON)));
 
-        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_BUCKET, responseWrapper.body());
@@ -107,7 +107,7 @@ public class StorageClientIntegrationTest {
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<Bucket> responseWrapper =
-                storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_ID);
+                storageClient.getBucket(NONEXISTENT_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -124,7 +124,7 @@ public class StorageClientIntegrationTest {
         stubFor(post(BUCKET_PATH).willReturn(ok().withBody(BUCKET_CREATED_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
+                .createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -137,7 +137,7 @@ public class StorageClientIntegrationTest {
         stubFor(post(BUCKET_PATH).willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
+                .createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -155,7 +155,7 @@ public class StorageClientIntegrationTest {
         stubFor(delete(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -168,7 +168,7 @@ public class StorageClientIntegrationTest {
         stubFor(delete(BUCKET_PATH + "/" + TEST_BUCKET_ID)
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -186,7 +186,7 @@ public class StorageClientIntegrationTest {
         stubFor(post(BUCKET_PATH + "/" + TEST_BUCKET_ID + "/empty")
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -199,7 +199,7 @@ public class StorageClientIntegrationTest {
         stubFor(post(BUCKET_PATH + "/" + TEST_BUCKET_ID + "/empty")
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -218,7 +218,7 @@ public class StorageClientIntegrationTest {
                 .willReturn(ok().withBody(MESSAGE_RESPONSE(expectedMessage))));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
+                .updateBucket(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -232,7 +232,7 @@ public class StorageClientIntegrationTest {
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
+                .updateBucket(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();

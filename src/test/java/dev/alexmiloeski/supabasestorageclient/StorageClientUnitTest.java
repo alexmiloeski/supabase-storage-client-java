@@ -57,7 +57,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(LIST_BUCKETS_JSON_RESPONSE, null, null));
 
-        final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
+        final ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBuckets();
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_BUCKETS, responseWrapper.body());
@@ -70,7 +70,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.make())
                 .thenReturn(new ResponseWrapper<>(BUCKET_JSON, null, null));
 
-        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<Bucket> responseWrapper = storageClient.getBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(EXPECTED_BUCKET, responseWrapper.body());
@@ -86,7 +86,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<Bucket> responseWrapper =
-                storageClient.getBucketWithWrapper(NONEXISTENT_BUCKET_ID);
+                storageClient.getBucket(NONEXISTENT_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -103,7 +103,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(BUCKET_CREATED_JSON_RESPONSE, null, null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.createBucketWithWrapper(
+        final ResponseWrapper<String> responseWrapper = storageClient.createBucket(
                 TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
         assertNotNull(responseWrapper);
         assertEquals(TEST_BUCKET_NAME, responseWrapper.body());
@@ -118,7 +118,7 @@ class StorageClientUnitTest {
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.createBucketWithWrapper(
+        final ResponseWrapper<String> responseWrapper = storageClient.createBucket(
                 TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
@@ -137,7 +137,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -152,7 +152,7 @@ class StorageClientUnitTest {
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -171,7 +171,7 @@ class StorageClientUnitTest {
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
+                .updateBucket(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -187,7 +187,7 @@ class StorageClientUnitTest {
                         null));
 
         final ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_ID, null, false, 0, null);
+                .updateBucket(TEST_BUCKET_ID, null, false, 0, null);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -205,7 +205,7 @@ class StorageClientUnitTest {
         when(mockRequestMaker.make()).thenReturn(
                 new ResponseWrapper<>(MESSAGE_RESPONSE(expectedMessage), null, null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertEquals(expectedMessage, responseWrapper.body());
@@ -220,7 +220,7 @@ class StorageClientUnitTest {
                         MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE),
                         null));
 
-        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        final ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());

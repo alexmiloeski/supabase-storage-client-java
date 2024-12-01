@@ -35,7 +35,7 @@ class StorageClientE2ETest {
     @Disabled
     void createBucketWithWrapperWithValidNameReturnsBodyWithName() {
         ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
+                .createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -52,7 +52,7 @@ class StorageClientE2ETest {
         String message = "The resource already exists";
 
         ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
+                .createBucket(TEST_BUCKET_ID, TEST_BUCKET_NAME, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -69,7 +69,7 @@ class StorageClientE2ETest {
     @Disabled
     void createBucketWithWrapperWithInvalidNameReturnsErrorResponse() {
         ResponseWrapper<String> responseWrapper = storageClient
-                .createBucketWithWrapper(null, null, false, null, null);
+                .createBucket(null, null, false, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.body());
@@ -88,7 +88,7 @@ class StorageClientE2ETest {
     @Disabled
     void listBucketsWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBucketsWithWrapper();
+        ResponseWrapper<List<Bucket>> responseWrapper = storageClient.listBuckets();
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -104,7 +104,7 @@ class StorageClientE2ETest {
     @Disabled
     void getBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<Bucket> responseWrapper = storageClient.getBucketWithWrapper(TEST_BUCKET_ID);
+        ResponseWrapper<Bucket> responseWrapper = storageClient.getBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -119,7 +119,7 @@ class StorageClientE2ETest {
     @Disabled
     void emptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.emptyBucketWithWrapper(TEST_BUCKET_ID);
+        ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -135,7 +135,7 @@ class StorageClientE2ETest {
     void updateBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucketWithWrapper(TEST_BUCKET_ID, null, true, null, null);
+                .updateBucket(TEST_BUCKET_ID, null, true, null, null);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
@@ -150,7 +150,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteNonEmptyBucketWithWrapperReturnsError() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -167,7 +167,7 @@ class StorageClientE2ETest {
     @Disabled
     void deleteEmptyBucketWithWrapper() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.deleteBucketWithWrapper(TEST_BUCKET_ID);
+        ResponseWrapper<String> responseWrapper = storageClient.deleteBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         String message = responseWrapper.body();
