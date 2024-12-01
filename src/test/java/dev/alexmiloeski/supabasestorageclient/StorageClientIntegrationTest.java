@@ -64,16 +64,15 @@ public class StorageClientIntegrationTest {
     }
 
     @Test
-    void healthCheckReturnsNullAndErrorWhenServerErrors() {
-        stubFor(get(STORAGE_PATH + "/health").willReturn(serverError()));
+    void healthCheckReturnsNullAndErrorWhenServerFails() {
+        stubFor(get(STORAGE_PATH + "/health").willReturn(serverError().withBody("{}")));
 
         ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
 
         assertNotNull(responseWrapper);
-        assertNotNull(responseWrapper.errorResponse());
-        assertEquals("500", responseWrapper.errorResponse().statusCode());
+        assertNotNull(responseWrapper.exception());
         assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertNull(responseWrapper.errorResponse());
     }
 
     @Test
