@@ -31,6 +31,19 @@ class StorageClientE2ETest {
     }
 
     @Test
+    @Order(1)
+    @Disabled
+    void healthCheck() {
+        ResponseWrapper<Boolean> responseWrapper = storageClient.isHealthy();
+
+        assertNotNull(responseWrapper);
+        boolean isHealthy = responseWrapper.body();
+        assertTrue(isHealthy);
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
     @Order(10)
     @Disabled
     void createBucketWithValidNameReturnsBodyWithName() {
