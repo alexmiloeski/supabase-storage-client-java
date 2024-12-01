@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
@@ -517,6 +518,47 @@ public class StorageClient {
      */
     public ResponseWrapper<List<FileObject>> listFilesInBucket(final String bucketId) {
         return listFilesInBucket(bucketId, null);
+    }
+
+    /**
+     * Get file info only, without the file's payload.
+     * <pre>
+     * REST GET url/storage/v1/object/info/authenticated/bucked-id/file-name
+     * REST response body example:
+     * {
+     *     "id": "2650a5da-be5d-49f0-919f-28ca78bffb99",
+     *     "name": "file-name",
+     *     "version": "65ce2629-1bf6-4386-b379-362fe934c73c",
+     *     "size": 5,
+     *     "content_type": "text/plain",
+     *     "cache_control": "no-cache",
+     *     "etag": "\"49b65ac753d529367ef48e34deca60bc\"",
+     *     "metadata": {},
+     *     "created_at": "2024-11-29T15:41:48.029Z"
+     * }</pre>
+     */
+    public ResponseWrapper<FileObjectInfo> getFileInfo(
+            final String bucketId, final String folderName, final String fileName) {
+        final String _folderName = folderName != null && !folderName.trim().isEmpty() ? folderName + "/" : "";
+        ResponseWrapper<String> rw = newRequest()
+                .object()
+                .path("/info/authenticated/%s/%s%s".formatted(bucketId, _folderName, fileName))
+                .makeWithWrapper();
+        try {
+            if (rw.body() != null) {
+                FileObjectInfo objectInfo = Mapper.toObjectInfo(rw.body());
+                return new ResponseWrapper<>(objectInfo, null, null);
+            }
+            return new ResponseWrapper<>(null, rw.errorResponse(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXCEPTION CONVERTING TO JSON!");
+            return new ResponseWrapper<>(null, null, e.getMessage());
+        }
+    }
+
+    public ResponseWrapper<FileObjectInfo> getFileInfo(final String bucketId, final String fileName) {
+        return getFileInfo(bucketId, null, fileName);
     }
 
     /**
