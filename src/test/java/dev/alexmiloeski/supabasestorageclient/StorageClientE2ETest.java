@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class StorageClientTest {
+class StorageClientE2ETest {
 
     final String testBucketId = "test-bucket-" + System.currentTimeMillis();
     final String testFileId = "test-file-" + System.currentTimeMillis();
