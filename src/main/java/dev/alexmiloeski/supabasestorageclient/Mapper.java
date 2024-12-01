@@ -74,9 +74,7 @@ class Mapper {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             System.out.println("COULDN'T MAP YO!");
-            return new ErrorResponse(statusCode + "", "json_mapping_error",
-                    "The response's body could not be mapped to an ErrorResponse. " +
-                            "Here is the response body's raw value: " + json);
+            throw new RuntimeException(e);
         }
     }
 
