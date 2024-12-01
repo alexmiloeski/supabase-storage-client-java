@@ -120,11 +120,13 @@ class RequestMaker {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 400) {
-                return new ResponseWrapper<>(null, Mapper.toErrorResponse(response.body(), response.statusCode()), null);
+                return new ResponseWrapper<>(
+                        null,
+                        Mapper.toErrorResponse(response.body(), response.statusCode()),
+                        null);
             }
             return new ResponseWrapper<>(response.body(), null, null);
-        } catch (IOException | InterruptedException e) {
-//            throw new RuntimeException(e);
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("IOException YO!");
             return new ResponseWrapper<>(null, null, e.getMessage());
