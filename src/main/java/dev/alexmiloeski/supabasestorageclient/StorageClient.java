@@ -70,42 +70,6 @@ public class StorageClient {
      *     }
      * ]
      */
-    public List<Bucket> listBuckets() {
-        String body = newRequest()
-                .bucket()
-                .make();
-        return Mapper.toBuckets(body);
-        // todo: if mapper throws, return error response with exception
-    }
-
-    /**
-     * REST GET url/storage/v1/bucket
-     * REST response body example:
-     * [
-     *     {
-     *         "id": "test-bucket-1-id",
-     *         "name": "test-bucket-1-name",
-     *         "owner": "",
-     *         "public": false,
-     *         "file_size_limit": null,
-     *         "allowed_mime_types": null,
-     *         "created_at": "2024-11-12T19:13:16.984Z",
-     *         "updated_at": "2024-11-12T19:13:16.984Z"
-     *     },
-     *     {
-     *         "id": "test-bucket-2-id",
-     *         "name": "test-bucket-2-name",
-     *         "owner": "",
-     *         "public": true,
-     *         "file_size_limit": 0,
-     *         "allowed_mime_types": [
-     *             "image/jpeg"
-     *         ],
-     *         "created_at": "2024-11-15T08:01:18.713Z",
-     *         "updated_at": "2024-11-15T08:01:18.713Z"
-     *     }
-     * ]
-     */
     public ResponseWrapper<List<Bucket>> listBucketsWithWrapper() {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
@@ -121,29 +85,6 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
-    }
-
-    /**
-     * REST GET url/storage/v1/bucket/some-bucket
-     * REST response body example:
-     * {
-     *     "id": "test-bucket-id",
-     *     "name": "test-bucket-name",
-     *     "owner": "",
-     *     "public": false,
-     *     "file_size_limit": null,
-     *     "allowed_mime_types": null,
-     *     "created_at": "2024-11-12T19:13:16.984Z",
-     *     "updated_at": "2024-11-12T19:13:16.984Z"
-     * }
-     */
-    public Bucket getBucket(final String bucketId) {
-        String body = newRequest()
-                .bucket()
-                .path(bucketId)
-                .make();
-        return Mapper.toBucket(body);
-        // todo: if mapper throws, return error response with exception
     }
 
     /**
@@ -176,45 +117,6 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
-    }
-
-    /**
-     * REST POST url/storage/v1/bucket
-     * REST request body example:
-     * {
-     *   "id": "test-bucket-id",
-     *   "name": "test-bucket-name",
-     *   "public": true,
-     *   "file_size_limit": 0,
-     *   "allowed_mime_types": ["image/jpeg"]
-     * }
-     * REST response body example:
-     * {
-     *     "name": "test-bucket-name"
-     * }
-     */
-    public String createBucket(String id, String name, boolean isPublic,
-                               Integer fileSizeLimit, List<String> allowedMimeTypes) {
-        Bucket newBucket = new Bucket(
-                id, name, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
-        String json;
-        try {
-            json = Mapper.mapper.writeValueAsString(newBucket);
-            // todo: put the mapper functions (using the Mapper) inside the DTO classes
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
-            return null;
-        }
-        String body = newRequest()
-                .bucket()
-                .post(json)
-                .jsonContent()
-                .make();
-        Bucket bucket = Mapper.toBucket(body);
-        // todo: if mapper throws, return error response with exception
-        System.out.println("bucket = " + bucket);
-        return bucket == null ? null : bucket.name();
     }
 
     /**
@@ -261,26 +163,6 @@ public class StorageClient {
      * REST DELETE url/storage/v1/bucket/some-bucket
      * REST response body example: {"message":"Successfully deleted"}
      */
-    public String deleteBucket(String id) {
-        String body = newRequest()
-                .bucket()
-                .delete()
-                .path(id)
-                .make();
-//        Bucket bucket = Mapper.toBucket(body);
-//        return bucket == null ? null : bucket.name();
-        try {
-            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
-            return resMap.get("message");
-        } catch (Exception ignore) {}
-        return null;
-        // response:
-    }
-
-    /**
-     * REST DELETE url/storage/v1/bucket/some-bucket
-     * REST response body example: {"message":"Successfully deleted"}
-     */
     public ResponseWrapper<String> deleteBucketWithWrapper(String id) {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
@@ -304,26 +186,6 @@ public class StorageClient {
      * REST POST url/storage/v1/bucket/some-bucket/empty
      * REST response body example: {"message":"Successfully emptied"}
      */
-    public String emptyBucket(String id) {
-        String body = newRequest()
-                .bucket()
-                .post()
-                .path(id + "/empty")
-                .make();
-//        Bucket bucket = Mapper.toBucket(body);
-//        return bucket == null ? null : bucket.name();
-        try {
-            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
-            return resMap.get("message");
-        } catch (Exception ignore) {}
-        return null;
-        // response: {"message":"Successfully emptied"}
-    }
-
-    /**
-     * REST POST url/storage/v1/bucket/some-bucket/empty
-     * REST response body example: {"message":"Successfully emptied"}
-     */
     public ResponseWrapper<String> emptyBucketWithWrapper(String id) {
         ResponseWrapper<String> rw = newRequest()
                 .bucket()
@@ -341,47 +203,6 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
-    }
-
-    /**
-     * REST PUT url/storage/v1/bucket/test-bucket-id
-     * REST request body example:
-     *  {
-     *   "id": "test-bucket-id",
-     *   "name": "test-bucket-name",
-     *   "public": false,
-     *   "file_size_limit": 0,
-     *   "allowed_mime_types": ["image/jpeg"]
-     * }
-     * REST response body example: {"message":"Successfully updated"}
-     */
-    public String updateBucket(String id, boolean isPublic, Integer fileSizeLimit, List<String> allowedMimeTypes) {
-        // POST url/storage/v1/bucket
-        Bucket newBucket = new Bucket(
-                null, null, null, isPublic, fileSizeLimit, allowedMimeTypes, null, null);
-        String json;
-        try {
-            json = Mapper.mapper.writeValueAsString(newBucket);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
-            return null;
-        }
-        System.out.println("json = " + json);
-        String body = newRequest()
-                .bucket()
-                .put(json)
-                .jsonContent()
-                .path(id)
-                .make();
-//        Bucket bucket = Mapper.toBucket(body);
-//        return bucket == null ? null : bucket.name();
-        try {
-            HashMap<String, String> resMap = Mapper.mapper.readValue(body, new TypeReference<>() {});
-            return resMap.get("message");
-        } catch (Exception ignore) {}
-        return null;
-        // response = {"message":"Successfully updated"}
     }
 
     /**
