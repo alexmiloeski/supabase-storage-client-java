@@ -261,6 +261,56 @@ class StorageClientE2ETest {
     // todo: upload file with folder (prefix)
 
     @Test
+    @Order(56)
+    @Disabled
+    void uploadFileWithDuplicateNameReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+
+        final String statusCode = "409";
+        final String error = "Duplicate";
+        final String message = "The resource already exists";
+
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .uploadFile(testBucketId, testFileId, testFileContents.getBytes());
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(statusCode, errorResponse.statusCode());
+        assertEquals(error, errorResponse.error());
+        assertEquals(message, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(57)
+    @Disabled
+    void uploadFileWithWrongBucketReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+
+        final String statusCode = "404";
+        final String error = "Bucket not found";
+        final String message = "Bucket not found";
+
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .uploadFile(nonexistentBucketId, testFileId, testFileContents.getBytes());
+
+        assertNotNull(responseWrapper);
+        ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals(statusCode, errorResponse.statusCode());
+        assertEquals(error, errorResponse.error());
+        assertEquals(message, errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    // todo: upload file with wrong mime type
+
+    // todo: upload file that's too large
+
+    @Test
     @Order(60)
     @Disabled
     void listFilesInBucket() throws InterruptedException {
