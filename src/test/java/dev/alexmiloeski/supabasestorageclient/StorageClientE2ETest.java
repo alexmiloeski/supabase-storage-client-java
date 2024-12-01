@@ -2,6 +2,7 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.Bucket;
 import dev.alexmiloeski.supabasestorageclient.model.FileObject;
+import dev.alexmiloeski.supabasestorageclient.model.options.FileMoveOptions;
 import dev.alexmiloeski.supabasestorageclient.model.options.ListFilesOptions;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
@@ -402,6 +403,39 @@ class StorageClientE2ETest {
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("404", errorResponse.statusCode());
+        assertEquals("not_found", errorResponse.error());
+        assertEquals("Object not found", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(78)
+    @Disabled
+    void moveFile() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                testBucketId, testFileId, testBucketId, movedTestFilePath));
+
+        assertNotNull(responseWrapper);
+        assertNotNull(responseWrapper.body());
+        assertEquals("Successfully moved", responseWrapper.body());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(79)
+    @Disabled
+    void moveFileWithWrongSourceBucketReturnsErrorResponse() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
+                nonexistentBucketId, testFileId, testBucketId, movedTestFilePath));
+
+        assertNotNull(responseWrapper);
+        final ErrorResponse errorResponse = responseWrapper.errorResponse();
         assertNotNull(errorResponse);
         assertEquals("404", errorResponse.statusCode());
         assertEquals("not_found", errorResponse.error());
