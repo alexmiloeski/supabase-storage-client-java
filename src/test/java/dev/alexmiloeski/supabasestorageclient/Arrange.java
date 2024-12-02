@@ -27,13 +27,14 @@ public class Arrange {
     static final String TEST_FILE_NAME = "test-file-" + System.currentTimeMillis();
     static final String TEST_FOLDER_NAME = "test-folder-" + System.currentTimeMillis();
     static final String TEST_FILE_ID = "f1c8e70a-95f8-47df-9122-d3f152f95f70";
-    static final String MOVED_TEST_FILE_PATH = TEST_FOLDER_NAME + "/" + TEST_FILE_NAME;
+    static final String MOVED_TEST_FILE_PATH = TEST_FOLDER_NAME + "/" + TEST_FILE_NAME + "-moved";
     static final String NONEXISTENT_FILE_NAME = "nonexistent-file-name";
     static final String NONEXISTENT_FILE_ID = "d0b2f30d-46f5-45a0-1231-f2d063c84d40";
     static final String NONEXISTENT_BUCKET_ID = "nonexistent-bucket";
     static final String VERSION_ID = "659f2132-c237-4e62-87ea-bc596398ec1d";
-    static final String TEST_FILE_CONTENTS = "Test file contents.";
-    static final String TEST_FILE_MODIFIED_CONTENTS = "Test file modified contents.";
+    static final String TEST_FILE_CONTENTS_SHORTER = "Test file contents.";
+    static final String TEST_FILE_CONTENTS_LONGER = "Test file longer contents.";
+    static final String TEST_FILE_CONTENTS_MODIFIED = "Modified.";
     static final Bucket EXPECTED_BUCKET = new Bucket(TEST_BUCKET_NAME, TEST_BUCKET_NAME, null,
             false, 0, null, "", "");
     static final String BUCKET_JSON = Mapper.toJson(EXPECTED_BUCKET);
@@ -128,6 +129,9 @@ public class Arrange {
     static String MESSAGE_RESPONSE(String successfullyEmptied) {
         return """
                 {"message":"%s"}""".formatted(successfullyEmptied);
+    }
+    static String NEW_FILE_NAME() {
+        return "test-file-" + System.currentTimeMillis();
     }
 
     public static void mockResponse(HttpClient mockHttpClient, String returnData, ArgumentMatcher<String> matcher) {
