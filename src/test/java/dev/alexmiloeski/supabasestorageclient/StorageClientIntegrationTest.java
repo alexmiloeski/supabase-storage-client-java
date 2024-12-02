@@ -294,13 +294,13 @@ public class StorageClientIntegrationTest {
     @Test
     void downloadFileReturnsFileContents() {
         stubFor(get(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
-                .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
+                .willReturn(ok().withBody(TEST_FILE_CONTENTS_SHORTER)));
 
         final ResponseWrapper<String> responseWrapper =
                 storageClient.downloadFile(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
-        assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
+        assertEquals(TEST_FILE_CONTENTS_SHORTER, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -308,13 +308,13 @@ public class StorageClientIntegrationTest {
     @Test
     void downloadFileBytesReturnsFileContentsInBytes() {
         stubFor(get(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
-                .willReturn(ok().withBody(TEST_FILE_CONTENTS)));
+                .willReturn(ok().withBody(TEST_FILE_CONTENTS_SHORTER)));
 
         final ResponseWrapper<byte[]> responseWrapper =
                 storageClient.downloadFileBytes(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
-        assertArrayEquals(TEST_FILE_CONTENTS.getBytes(), responseWrapper.body());
+        assertArrayEquals(TEST_FILE_CONTENTS_SHORTER.getBytes(), responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
