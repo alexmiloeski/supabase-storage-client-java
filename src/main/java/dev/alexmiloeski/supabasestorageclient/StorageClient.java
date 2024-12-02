@@ -448,15 +448,23 @@ public class StorageClient {
      *     "error": "Payload too large",
      *     "message": "The object exceeded the maximum allowed size"
      * }
+     * REST error response body example for invalid mime type:
+     * {
+     *     "statusCode": "415",
+     *     "error": "invalid_mime_type",
+     *     "message": "mime type text/plain is not supported"
+     * }
      */
     public ResponseWrapper<FileObjectIdentity> uploadFile(
-            final String bucketId, final String fileName, byte[] bytes
+            final String bucketId, final String folderName, final String fileName, byte[] bytes, String mimeType
     ) {
-        // todo: what about Content-Type header? is it needed at all?
+        final String _folderName = folderName == null ? "" : folderName + "/";
+
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path(bucketId + "/" + fileName)
+                .path(bucketId + "/" + _folderName + fileName)
                 .post(bytes)
+                .contentType(mimeType)
                 .make();
         try {
             if (rw.body() != null) {
@@ -469,6 +477,24 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
+    }
+
+    public ResponseWrapper<FileObjectIdentity> uploadFile(
+            final String bucketId, final String folderName, final String fileName, byte[] bytes
+    ) {
+        return uploadFile(bucketId, folderName, fileName, bytes, null);
+    }
+
+    public ResponseWrapper<FileObjectIdentity> uploadFile(
+            final String bucketId, final String fileName, byte[] bytes
+    ) {
+        return uploadFile(bucketId, null, fileName, bytes, null);
+    }
+
+    public ResponseWrapper<FileObjectIdentity> uploadFile(
+            final String bucketId, final String fileName, byte[] bytes, String mimeType
+    ) {
+        return uploadFile(bucketId, null, fileName, bytes, mimeType);
     }
 
     /**
