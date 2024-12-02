@@ -476,7 +476,7 @@ public class StorageClient {
     public ResponseWrapper<FileObjectIdentity> uploadFile(
             final String bucketId, final String fileName, byte[] bytes
     ) {
-        return uploadFile(bucketId, fileName, bytes, null);
+        return uploadFile(bucketId, fileName, bytes, "text/plain");
     }
 
     /**
