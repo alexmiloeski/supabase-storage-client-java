@@ -282,13 +282,13 @@ class StorageClientUnitTest {
     @Test
     void downloadFileReturnsFileContents() {
         when(mockRequestMaker.make())
-                .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
+                .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS_SHORTER, null, null));
 
         final ResponseWrapper<String> responseWrapper =
                 storageClient.downloadFile(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
-        assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
+        assertEquals(TEST_FILE_CONTENTS_SHORTER, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -296,13 +296,13 @@ class StorageClientUnitTest {
     @Test
     void downloadFileBytesReturnsFileContentsInBytes() {
         when(mockRequestMaker.make())
-                .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS, null, null));
+                .thenReturn(new ResponseWrapper<>(TEST_FILE_CONTENTS_SHORTER, null, null));
 
         final ResponseWrapper<byte[]> responseWrapper =
                 storageClient.downloadFileBytes(TEST_BUCKET_ID, TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
-        assertArrayEquals(TEST_FILE_CONTENTS.getBytes(), responseWrapper.body());
+        assertArrayEquals(TEST_FILE_CONTENTS_SHORTER.getBytes(), responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
