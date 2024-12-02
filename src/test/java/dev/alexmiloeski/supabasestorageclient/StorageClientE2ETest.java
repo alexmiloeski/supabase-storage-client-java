@@ -113,7 +113,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(25)
+    @Order(30)
     @Disabled
     void getBucket() throws InterruptedException {
         Thread.sleep(100);
@@ -128,7 +128,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(210)
+    @Order(45)
     @Disabled
     void updateBucketWithSmallerSizeAndOneMimeTypeReturnsCorrectMessage() throws InterruptedException {
         Thread.sleep(100);
@@ -144,7 +144,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(40)
+    @Order(210)
     @Disabled
     void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
@@ -343,7 +343,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(62)
+    @Order(52)
     @Disabled
     void listFilesInBucketWithFolder() throws InterruptedException {
         Thread.sleep(100);
@@ -359,7 +359,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(65)
+    @Order(60)
     @Disabled
     void getFileInfoReturnsFileObjectInfo() throws InterruptedException {
         Thread.sleep(100);
@@ -376,7 +376,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(65)
+    @Order(63)
     @Disabled
     void getFileInfoWithFolderReturnsFileObjectInfo() throws InterruptedException {
         Thread.sleep(100);
@@ -460,7 +460,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(75)
+    @Order(90)
     @Disabled
     void updateFile() throws InterruptedException {
         Thread.sleep(100);
@@ -479,7 +479,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(76)
+    @Order(93)
     @Disabled
     void updateFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
@@ -498,7 +498,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(76)
+    @Order(96)
     @Disabled
     void updateFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
@@ -516,7 +516,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(78)
+    @Order(100)
     @Disabled
     void moveFile() throws InterruptedException {
         Thread.sleep(100);
@@ -531,7 +531,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(79)
+    @Order(103)
     @Disabled
     void moveFileWithWrongSourceBucketReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
@@ -549,7 +549,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(83)
+    @Order(110)
     @Disabled
     void deleteFile() throws InterruptedException {
         Thread.sleep(100);
@@ -563,7 +563,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(81)
+    @Order(113)
     @Disabled
     void deleteFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
