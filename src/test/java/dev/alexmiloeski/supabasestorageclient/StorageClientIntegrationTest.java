@@ -499,17 +499,14 @@ public class StorageClientIntegrationTest {
         assertNull(responseWrapper.exception());
     }
 
-    // todo: upload file with wrong mime type
     @Test
-    @Disabled
     void uploadFileWithWrongMimeTypeReturnsErrorResponse() {
         stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
-                .withHeader("Content-Type", equalTo("image/jpeg"))
+                .withHeader("Content-Type", notMatching("text/plain"))
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
-                storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
-        // todo: what about the Content-Type header in the request?
+                storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0], "image/jpeg");
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
