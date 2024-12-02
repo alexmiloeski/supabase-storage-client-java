@@ -130,25 +130,25 @@ class StorageClientE2ETest {
     @Test
     @Order(210)
     @Disabled
-    void emptyBucket() throws InterruptedException {
+    void updateBucketWithSmallerSizeAndOneMimeTypeReturnsCorrectMessage() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
+        final String expectedMessage = "Successfully updated";
+        ResponseWrapper<String> responseWrapper = storageClient
+                .updateBucket(TEST_BUCKET_ID, null, true,
+                        TEST_FILE_CONTENTS_LONGER.getBytes().length-1, List.of("image/jpeg"));
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
-        String message = responseWrapper.body();
-        assertNotNull(message);
-        assertFalse(message.isEmpty());
+        assertEquals(expectedMessage, responseWrapper.body());
     }
 
     @Test
     @Order(40)
     @Disabled
-    void updateBucket() throws InterruptedException {
+    void emptyBucket() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<String> responseWrapper = storageClient
-                .updateBucket(TEST_BUCKET_ID, null, true, null, null);
+        ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
         assertNotNull(responseWrapper);
         assertNull(responseWrapper.errorResponse());
