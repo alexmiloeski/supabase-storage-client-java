@@ -285,7 +285,7 @@ class StorageClientE2ETest {
         assertNotNull(errorResponse);
         assertEquals("415", errorResponse.statusCode());
         assertEquals("invalid_mime_type", errorResponse.error());
-        assertEquals("mime type application/octet-stream is not supported", errorResponse.message());
+        assertEquals("mime type text/plain is not supported", errorResponse.message());
         assertNull(responseWrapper.body());
         assertNull(responseWrapper.exception());
     }
