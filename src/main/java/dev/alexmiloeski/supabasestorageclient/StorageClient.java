@@ -545,12 +545,13 @@ public class StorageClient {
      * }
      */
     public ResponseWrapper<FileObjectIdentity> updateFile(
-            final String bucketId, final String fileName, byte[] bytes
+            final String bucketId, final String fileName, byte[] bytes, String mimeType
     ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
                 .path(bucketId + "/" + fileName)
                 .put(bytes)
+                .contentType(mimeType)
                 .make();
         try {
             if (rw.body() != null) {
@@ -563,6 +564,12 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
+    }
+
+    public ResponseWrapper<FileObjectIdentity> updateFile(
+            final String bucketId, final String fileName, byte[] bytes
+    ) {
+        return updateFile(bucketId, fileName, bytes, null);
     }
 
     /**
