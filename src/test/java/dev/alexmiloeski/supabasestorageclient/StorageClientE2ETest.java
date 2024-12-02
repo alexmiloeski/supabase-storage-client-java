@@ -191,12 +191,12 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(55)
+    @Order(40)
     @Disabled
     void uploadFile() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.uploadFile(
+                TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS_LONGER.getBytes());
 
         assertNotNull(responseWrapper);
         FileObjectIdentity identity = responseWrapper.body();
@@ -207,10 +207,27 @@ class StorageClientE2ETest {
         assertNull(responseWrapper.exception());
     }
 
-    // todo: upload file with folder (prefix)
+    @Test
+    @Order(40)
+    @Disabled
+    void uploadFileWithFolder() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.uploadFile(
+                TEST_BUCKET_ID,
+                TEST_FOLDER_NAME + "/" + TEST_FILE_NAME,
+                TEST_FILE_CONTENTS_LONGER.getBytes());
+
+        assertNotNull(responseWrapper);
+        FileObjectIdentity identity = responseWrapper.body();
+        assertEquals(TEST_BUCKET_ID + "/" + TEST_FOLDER_NAME + "/" + TEST_FILE_NAME, identity.key());
+        assertNotNull(identity.id());
+        assertFalse(identity.id().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
 
     @Test
-    @Order(56)
+    @Order(42)
     @Disabled
     void uploadFileWithDuplicateNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
@@ -219,8 +236,8 @@ class StorageClientE2ETest {
         final String error = "Duplicate";
         final String message = "The resource already exists";
 
-        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.uploadFile(
+                TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS_SHORTER.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -233,7 +250,7 @@ class StorageClientE2ETest {
     }
 
     @Test
-    @Order(57)
+    @Order(44)
     @Disabled
     void uploadFileWithWrongBucketReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
@@ -242,8 +259,8 @@ class StorageClientE2ETest {
         final String error = "Bucket not found";
         final String message = "Bucket not found";
 
-        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .uploadFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_CONTENTS.getBytes());
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.uploadFile(
+                NONEXISTENT_BUCKET_ID, NEW_FILE_NAME(), TEST_FILE_CONTENTS_SHORTER.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -255,12 +272,64 @@ class StorageClientE2ETest {
         assertNull(responseWrapper.exception());
     }
 
-    // todo: upload file with wrong mime type
+    @Test
+    @Order(47)
+    @Disabled
+    void uploadFileWithInvalidMimeTypeReturnsError() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.uploadFile(
+                TEST_BUCKET_ID, NEW_FILE_NAME(), TEST_FILE_CONTENTS_SHORTER.getBytes());
 
-    // todo: upload file that's too large
+        assertNotNull(responseWrapper);
+        final ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("415", errorResponse.statusCode());
+        assertEquals("invalid_mime_type", errorResponse.error());
+        assertEquals("mime type application/octet-stream is not supported", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
 
     @Test
-    @Order(60)
+    @Order(47)
+    @Disabled
+    void uploadOversizedFileReturnsError() throws InterruptedException {
+        Thread.sleep(100);
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .uploadFile(TEST_BUCKET_ID, NEW_FILE_NAME(),
+                        TEST_FILE_CONTENTS_LONGER.getBytes(), "image/jpeg");
+
+        assertNotNull(responseWrapper);
+        final ErrorResponse errorResponse = responseWrapper.errorResponse();
+        assertNotNull(errorResponse);
+        assertEquals("413", errorResponse.statusCode());
+        assertEquals("Payload too large", errorResponse.error());
+        assertEquals("The object exceeded the maximum allowed size", errorResponse.message());
+        assertNull(responseWrapper.body());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(48)
+    @Disabled
+    void uploadFileWithRightSizeAndMimeTypeReturnsIdentity() throws InterruptedException {
+        Thread.sleep(100);
+        final String newFileName = NEW_FILE_NAME();
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
+                .uploadFile(TEST_BUCKET_ID, newFileName,
+                        TEST_FILE_CONTENTS_SHORTER.getBytes(), "image/jpeg");
+
+        assertNotNull(responseWrapper);
+        FileObjectIdentity identity = responseWrapper.body();
+        assertEquals(TEST_BUCKET_ID + "/" + newFileName, identity.key());
+        assertNotNull(identity.id());
+        assertFalse(identity.id().isEmpty());
+        assertNull(responseWrapper.errorResponse());
+        assertNull(responseWrapper.exception());
+    }
+
+    @Test
+    @Order(50)
     @Disabled
     void listFilesInBucket() throws InterruptedException {
         Thread.sleep(100);
