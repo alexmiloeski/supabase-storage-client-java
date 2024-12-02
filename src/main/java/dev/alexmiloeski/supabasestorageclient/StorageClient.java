@@ -373,11 +373,11 @@ public class StorageClient {
      * }</pre>
      */
     public ResponseWrapper<FileObjectInfo> getFileInfo(
-            final String bucketId, final String folderName, final String fileName) {
-        final String _folderName = folderName != null && !folderName.trim().isEmpty() ? folderName + "/" : "";
+            final String bucketId, final String fileName
+    ) {
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path("/info/authenticated/%s/%s%s".formatted(bucketId, _folderName, fileName))
+                .path("/info/authenticated/%s/%s".formatted(bucketId, fileName))
                 .make();
         try {
             if (rw.body() != null) {
@@ -390,10 +390,6 @@ public class StorageClient {
             System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
-    }
-
-    public ResponseWrapper<FileObjectInfo> getFileInfo(final String bucketId, final String fileName) {
-        return getFileInfo(bucketId, null, fileName);
     }
 
     /**
@@ -456,13 +452,11 @@ public class StorageClient {
      * }
      */
     public ResponseWrapper<FileObjectIdentity> uploadFile(
-            final String bucketId, final String folderName, final String fileName, byte[] bytes, String mimeType
+            final String bucketId, final String fileName, byte[] bytes, String mimeType
     ) {
-        final String _folderName = folderName == null ? "" : folderName + "/";
-
         ResponseWrapper<String> rw = newRequest()
                 .object()
-                .path(bucketId + "/" + _folderName + fileName)
+                .path(bucketId + "/" + fileName)
                 .post(bytes)
                 .contentType(mimeType)
                 .make();
@@ -480,21 +474,9 @@ public class StorageClient {
     }
 
     public ResponseWrapper<FileObjectIdentity> uploadFile(
-            final String bucketId, final String folderName, final String fileName, byte[] bytes
-    ) {
-        return uploadFile(bucketId, folderName, fileName, bytes, null);
-    }
-
-    public ResponseWrapper<FileObjectIdentity> uploadFile(
             final String bucketId, final String fileName, byte[] bytes
     ) {
-        return uploadFile(bucketId, null, fileName, bytes, null);
-    }
-
-    public ResponseWrapper<FileObjectIdentity> uploadFile(
-            final String bucketId, final String fileName, byte[] bytes, String mimeType
-    ) {
-        return uploadFile(bucketId, null, fileName, bytes, mimeType);
+        return uploadFile(bucketId, fileName, bytes, null);
     }
 
     /**
