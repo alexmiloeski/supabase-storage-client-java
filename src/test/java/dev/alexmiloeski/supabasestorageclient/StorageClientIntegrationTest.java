@@ -459,12 +459,30 @@ public class StorageClientIntegrationTest {
     }
 
     @Test
-    void uploadFileWithRightSizeReturnsIdentity() {
+    void uploadFileWithRightSizeAndMimeTypeReturnsIdentity() {
+        final String statusCodeOversized = "413";
+        final String errorOversized = "Payload too large";
+        final String messageOversized = "The object exceeded the maximum allowed size";
+        final String jsonResponseOversized = """
+                {"statusCode":"%s","error":"%s","message":"%s"}"""
+                .formatted(statusCodeOversized, errorOversized, messageOversized);
         stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeGreaterThan(1))
-                .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
+                .willReturn(badRequest().withBody(jsonResponseOversized)));
+
+        final String statusCodeWrongMimeType = "415";
+        final String errorWrongMimeType = "invalid_mime_type";
+        final String messageWrongMimeType = "mime type <whatever> is not supported";
+        final String jsonResponseWrongMimeType = """
+                {"statusCode":"%s","error":"%s","message":"%s"}"""
+                .formatted(statusCodeWrongMimeType, errorWrongMimeType, messageWrongMimeType);
+        stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
+                .withHeader("Content-Type", notMatching("text/plain"))
+                .willReturn(badRequest().withBody(jsonResponseWrongMimeType)));
+
         stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeLessThan(2))
+                .withHeader("Content-Type", equalTo("text/plain"))
                 .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
