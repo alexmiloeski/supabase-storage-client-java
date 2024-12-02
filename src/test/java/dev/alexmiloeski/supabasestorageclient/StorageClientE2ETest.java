@@ -402,7 +402,7 @@ class StorageClientE2ETest {
 
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
-        assertEquals(TEST_FILE_CONTENTS, responseWrapper.body());
+        assertEquals(TEST_FILE_CONTENTS_LONGER, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -418,7 +418,7 @@ class StorageClientE2ETest {
         assertNotNull(responseWrapper);
         assertNotNull(responseWrapper.body());
         final String stringBody = new String(responseWrapper.body());
-        assertEquals(TEST_FILE_CONTENTS, stringBody);
+        assertEquals(TEST_FILE_CONTENTS_LONGER, stringBody);
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -465,7 +465,8 @@ class StorageClientE2ETest {
     void updateFile() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
+                .updateFile(TEST_BUCKET_ID, TEST_FILE_NAME,
+                        TEST_FILE_CONTENTS_MODIFIED.getBytes(), "image/jpeg");
 
         assertNotNull(responseWrapper);
         FileObjectIdentity identity = responseWrapper.body();
@@ -483,7 +484,8 @@ class StorageClientE2ETest {
     void updateFileWithWrongBucketNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
+                .updateFile(NONEXISTENT_BUCKET_ID, NONEXISTENT_FILE_NAME,
+                        TEST_FILE_CONTENTS_MODIFIED.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
@@ -500,8 +502,8 @@ class StorageClientE2ETest {
     @Disabled
     void updateFileWithWrongFileNameReturnsErrorResponse() throws InterruptedException {
         Thread.sleep(100);
-        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
-                .updateFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_FILE_MODIFIED_CONTENTS.getBytes());
+        ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient.updateFile(
+                TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_FILE_CONTENTS_SHORTER.getBytes());
 
         assertNotNull(responseWrapper);
         ErrorResponse errorResponse = responseWrapper.errorResponse();
