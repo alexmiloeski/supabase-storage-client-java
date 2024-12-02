@@ -381,7 +381,7 @@ class StorageClientE2ETest {
     void getFileInfoWithFolderReturnsFileObjectInfo() throws InterruptedException {
         Thread.sleep(100);
         ResponseWrapper<FileObjectInfo> responseWrapper = storageClient.getFileInfo(
-                TEST_BUCKET_ID, TEST_FOLDER_NAME, TEST_FILE_NAME);
+                TEST_BUCKET_ID, TEST_FOLDER_NAME + "/" + TEST_FILE_NAME);
 
         assertNotNull(responseWrapper);
         final FileObjectInfo fileInfo = responseWrapper.body();
