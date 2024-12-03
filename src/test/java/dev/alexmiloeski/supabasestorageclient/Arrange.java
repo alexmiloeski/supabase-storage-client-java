@@ -126,7 +126,7 @@ public class Arrange {
             TEST_BUCKET_2_NAME, TEST_BUCKET_2_NAME, TEST_DATE, TEST_DATE);
     static final FileObjectIdentity EXPECTED_OBJECT_IDENTITY =
             new FileObjectIdentity(TEST_BUCKET_NAME + "/" + TEST_FILE_NAME, TEST_FILE_ID);
-    static final String KEY_N_ID_JSON_RESPONSE = """
+    static final String IDENTITY_JSON_RESPONSE = """
             {"Key":"%s","Id":"%s"}""".formatted(EXPECTED_OBJECT_IDENTITY.key(), EXPECTED_OBJECT_IDENTITY.id());
 
     static String MESSAGE_RESPONSE(String successfullyEmptied) {

@@ -407,7 +407,7 @@ public class StorageClientIntegrationTest {
     @Test
     void updateFileReturnsIdentity() {
         stubFor(put(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
-                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+                .willReturn(ok().withBody(IDENTITY_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
@@ -480,7 +480,7 @@ public class StorageClientIntegrationTest {
         stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeLessThan(2))
                 .withHeader("Content-Type", equalTo("text/plain"))
-                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+                .willReturn(ok().withBody(IDENTITY_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[1]);
@@ -499,7 +499,7 @@ public class StorageClientIntegrationTest {
                 .willReturn(badRequest().withBody(MOCK_ERROR_JSON_RESPONSE)));
         stubFor(post(OBJECT_PATH + "/" + TEST_BUCKET_ID + "/" + TEST_FILE_NAME)
                 .withRequestBody(withSizeLessThan(2))
-                .willReturn(ok().withBody(KEY_N_ID_JSON_RESPONSE)));
+                .willReturn(ok().withBody(IDENTITY_JSON_RESPONSE)));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[3]);

@@ -330,7 +330,7 @@ class StorageClientUnitTest {
     @Test
     void updateFileReturnsProperResponse() {
         when(mockRequestMaker.make()).thenReturn(
-                new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
+                new ResponseWrapper<>(IDENTITY_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
@@ -365,7 +365,7 @@ class StorageClientUnitTest {
     @Test
     void uploadFileReturnsProperResponse() {
         when(mockRequestMaker.make()).thenReturn(
-                new ResponseWrapper<>(KEY_N_ID_JSON_RESPONSE, null, null));
+                new ResponseWrapper<>(IDENTITY_JSON_RESPONSE, null, null));
 
         final ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
