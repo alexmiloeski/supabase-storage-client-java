@@ -104,14 +104,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<Bucket> responseWrapper =
                 storageClient.getBucket(NONEXISTENT_BUCKET_ID);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -196,14 +189,7 @@ public class StorageClientIntegrationTest {
 
         final ResponseWrapper<String> responseWrapper = storageClient.emptyBucket(TEST_BUCKET_ID);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -229,14 +215,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper = storageClient
                 .updateBucket(TEST_BUCKET_ID, null, false, 0, null);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -277,14 +256,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<List<FileObject>> responseWrapper =
                 storageClient.listFilesInBucket(NONEXISTENT_BUCKET_ID);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -323,14 +295,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper =
                 storageClient.downloadFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -341,14 +306,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper =
                 storageClient.downloadFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -375,14 +333,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper =
                 storageClient.deleteFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -393,14 +344,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper =
                 storageClient.deleteFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -425,14 +369,7 @@ public class StorageClientIntegrationTest {
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -443,14 +380,7 @@ public class StorageClientIntegrationTest {
         ResponseWrapper<FileObjectIdentity> responseWrapper = storageClient
                 .updateFile(TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, new byte[0]);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -501,14 +431,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[3]);
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -520,14 +443,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<FileObjectIdentity> responseWrapper =
                 storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0], "image/jpeg");
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -570,14 +486,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
                 NONEXISTENT_BUCKET_ID, TEST_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -596,14 +505,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
                 TEST_BUCKET_ID, NONEXISTENT_FILE_NAME, TEST_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
     @Test
@@ -622,14 +524,7 @@ public class StorageClientIntegrationTest {
         final ResponseWrapper<String> responseWrapper = storageClient.moveFile(new FileMoveOptions(
                 TEST_BUCKET_ID, TEST_FILE_NAME, NONEXISTENT_BUCKET_ID, MOVED_TEST_FILE_PATH));
 
-        assertNotNull(responseWrapper);
-        ErrorResponse errorResponse = responseWrapper.errorResponse();
-        assertNotNull(errorResponse);
-        assertEquals(MOCK_ERROR_STATUS, errorResponse.statusCode());
-        assertEquals(MOCK_ERROR, errorResponse.error());
-        assertEquals(MOCK_ERROR_MESSAGE, errorResponse.message());
-        assertNull(responseWrapper.body());
-        assertNull(responseWrapper.exception());
+        assertEquals(EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER, responseWrapper);
     }
 
 
