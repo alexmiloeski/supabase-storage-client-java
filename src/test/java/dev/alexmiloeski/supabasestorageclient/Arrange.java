@@ -5,6 +5,7 @@ import dev.alexmiloeski.supabasestorageclient.model.FileObject;
 import dev.alexmiloeski.supabasestorageclient.model.FileObjectInfo;
 import dev.alexmiloeski.supabasestorageclient.model.responses.ErrorResponse;
 import dev.alexmiloeski.supabasestorageclient.model.responses.FileObjectIdentity;
+import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 import org.mockito.ArgumentMatcher;
 
 import java.net.http.HttpClient;
@@ -49,8 +50,9 @@ public class Arrange {
     static final String MOCK_ERROR_JSON_RESPONSE = """
                 {"statusCode":"%s","error":"%s","message":"%s"}"""
             .formatted(MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
-    static final ErrorResponse EXPECTED_MOCK_ERROR_RESPONSE = new ErrorResponse(
-            MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE);
+    static final ResponseWrapper<?> EXPECTED_MOCK_ERROR_RESPONSE_WRAPPER = new ResponseWrapper<>(
+            null, new ErrorResponse(
+                    MOCK_ERROR_STATUS, MOCK_ERROR, MOCK_ERROR_MESSAGE), null);
     static final String TEST_DATE = "2024-11-12T19:14:12.167Z";
     private static final String E_TAG = "88c163864a2335ddbc8d6132a4db382c-1";
     private static final String E_TAG_ACTUAL = "\\\"%s\\\"".formatted(E_TAG);
