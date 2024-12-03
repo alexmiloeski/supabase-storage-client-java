@@ -413,8 +413,7 @@ public class StorageClientIntegrationTest {
                 storageClient.updateFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[0]);
 
         assertNotNull(responseWrapper);
-        final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
-        assertEquals(EXPECTED_OBJECT_IDENTITY, fileObjectIdentity);
+        assertEquals(EXPECTED_OBJECT_IDENTITY, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
@@ -486,8 +485,7 @@ public class StorageClientIntegrationTest {
                 storageClient.uploadFile(TEST_BUCKET_ID, TEST_FILE_NAME, new byte[1]);
 
         assertNotNull(responseWrapper);
-        final FileObjectIdentity fileObjectIdentity = responseWrapper.body();
-        assertEquals(EXPECTED_OBJECT_IDENTITY, fileObjectIdentity);
+        assertEquals(EXPECTED_OBJECT_IDENTITY, responseWrapper.body());
         assertNull(responseWrapper.errorResponse());
         assertNull(responseWrapper.exception());
     }
