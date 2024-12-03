@@ -142,13 +142,17 @@ public class Arrange {
         return "test-file-" + System.currentTimeMillis();
     }
 
-    public static void mockResponse(HttpClient mockHttpClient, String returnData, ArgumentMatcher<String> matcher) {
+    public static void mockResponse(HttpClient mockHttpClient,
+                                    String httpMethod,
+                                    ArgumentMatcher<String> matcher,
+                                    int statusCode,
+                                    String returnData) {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
-        when(mockResponse.statusCode()).thenReturn(200);
+        when(mockResponse.statusCode()).thenReturn(statusCode);
         when(mockResponse.body()).thenReturn(returnData);
         try {
             when(mockHttpClient.send(
-                    argThat(request -> matcher.matches(request.uri().toString())),
+                    argThat(request -> matcher.matches(request.uri().toString()) && request.method().equals(httpMethod)),
                     any(HttpResponse.BodyHandler.class)
             )).thenReturn(mockResponse);
         } catch (Exception e) {
@@ -158,9 +162,7 @@ public class Arrange {
     }
 
     public static void mockResponse(HttpClient mockHttpClient,
-                                    String returnData,
-                                    String httpMethod,
-                                    ArgumentMatcher<String> matcher) {
+                                    String httpMethod, ArgumentMatcher<String> matcher, String returnData) {
         HttpResponse<String> mockResponse = mock(HttpResponse.class);
         when(mockResponse.statusCode()).thenReturn(200);
         when(mockResponse.body()).thenReturn(returnData);
