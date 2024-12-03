@@ -25,8 +25,6 @@ class Mapper {
         try {
             return mapper.readValue(json, Bucket.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }
@@ -37,8 +35,6 @@ class Mapper {
             return mapper.readValue(json, new TypeReference<>() {
             });
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }
@@ -48,8 +44,6 @@ class Mapper {
         try {
             return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }
@@ -59,8 +53,6 @@ class Mapper {
         try {
             return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }
@@ -72,8 +64,6 @@ class Mapper {
         try {
             return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }
@@ -87,8 +77,6 @@ class Mapper {
         try {
             return mapper.readValue(json, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("COULDN'T MAP YO!");
             throw new RuntimeException(e);
         }
     }

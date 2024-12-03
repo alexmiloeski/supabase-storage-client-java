@@ -2,7 +2,6 @@ package dev.alexmiloeski.supabasestorageclient;
 
 import dev.alexmiloeski.supabasestorageclient.model.responses.ResponseWrapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -127,8 +126,6 @@ class RequestMaker {
             }
             return new ResponseWrapper<>(response.body(), null, null);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("IOException YO!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }

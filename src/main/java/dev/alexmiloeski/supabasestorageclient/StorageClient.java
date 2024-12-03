@@ -50,8 +50,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -95,8 +93,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -127,8 +123,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -167,8 +161,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -190,8 +182,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -213,8 +203,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -240,8 +228,6 @@ public class StorageClient {
         try {
             json = Mapper.mapper.writeValueAsString(newBucket);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
         ResponseWrapper<String> rw = newRequest()
@@ -257,8 +243,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -338,8 +322,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -386,8 +368,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -467,8 +447,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -503,8 +481,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -542,8 +518,6 @@ public class StorageClient {
             }
             return new ResponseWrapper<>(null, rw.errorResponse(), rw.exception());
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
@@ -580,8 +554,6 @@ public class StorageClient {
             }
             return rw;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CONVERTING TO JSON!");
             return new ResponseWrapper<>(null, null, e.getMessage());
         }
     }
