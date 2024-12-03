@@ -25,9 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StorageClientIntegrationTest {
 
     final static String TEST_API_KEY = "testApiKey";
-    final static String STORAGE_PATH = "/storage/v1";
-    final static String BUCKET_PATH = STORAGE_PATH + "/bucket";
-    final static String OBJECT_PATH = STORAGE_PATH + "/object";
 
     StorageClient storageClient;
 

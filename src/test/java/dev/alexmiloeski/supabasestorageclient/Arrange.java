@@ -17,6 +17,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class Arrange {
+    static final String STORAGE_PATH = "/storage/v1";
+    static final String BUCKET_PATH = STORAGE_PATH + "/bucket";
+    static final String OBJECT_PATH = STORAGE_PATH + "/object";
     static final String MOCK_ERROR_STATUS = "499";
     static final String MOCK_ERROR = "some_error";
     static final String MOCK_ERROR_MESSAGE = "Some error message";
